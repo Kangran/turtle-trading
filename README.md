@@ -1,5 +1,5 @@
 # turtle-trading
-Profit from financial markets using trend trading
+Profit using trend trading
 
 # strategy
 See https://github.com/vyq/turtle-trading/raw/master/the-original-turtle-trading-rules.pdf
