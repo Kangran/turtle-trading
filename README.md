@@ -16,6 +16,11 @@ See https://github.com/vyq/turtle-trading/raw/master/the-original-turtle-trading
     - Position sizing: How much to buy or sell
         - Diversification
         - Money management
+        - Risk limit
+            - Single market: 4 units
+            - Closely correlated markets: 6 units
+            - Loosely correlated markets: 10 units
+            - Single direction: 12 units
     - Entries: When to buy or sell
         - Exact price and market conditions to enter
     - Stops: When to get out of a losing position
