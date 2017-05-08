@@ -27,5 +27,8 @@ See https://github.com/vyq/turtle-trading/raw/master/the-original-turtle-trading
     - Stops: When to get out of a losing position
         - Cut loss
         - Define point to get out before entering
+        - Tighten stops based on 2 times volatility from previous fill price, or use 0.5 times volatility for each unit
     - Exits: When to get out of a winning position
+        - Maintain discipline to exit
+        - Do not exit early
     - Tactics: How to buy or sell
