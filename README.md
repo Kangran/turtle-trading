@@ -32,3 +32,20 @@ See https://github.com/vyq/turtle-trading/raw/master/the-original-turtle-trading
         - Maintain discipline to exit
         - Do not exit early
     - Tactics: How to buy or sell
+        - Do not place stop orders
+        - Use limit orders
+        - Wait for temporary price reversal before placing orders
+        - If multiple signals
+            - Rank markets that moved the most in terms of volatility
+            - Long strongest market
+            - Short weakest market
+        - Do not roll over expiring contract unless breakout
+        - Roll over into new contract month a few weeks before expiration, unless current position performs better
+            - Review volume and open interest
+        - Have discipline to follow the rules
+- Further study
+    - Trading psychology
+    - Money management
+    - Trading research
+- Warning
+    - Best advice comes from those who are not selling it and are making money trading
