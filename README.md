@@ -23,6 +23,7 @@ See https://github.com/vyq/turtle-trading/raw/master/the-original-turtle-trading
             - Single direction: 12 units
     - Entries: When to buy or sell
         - Exact price and market conditions to enter
+        - Consistent in taking entry signals
     - Stops: When to get out of a losing position
         - Cut loss
         - Define point to get out before entering
