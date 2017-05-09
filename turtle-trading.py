@@ -8,12 +8,6 @@ def initialize(context):
     """
     Set up algorithm.
     """
-    # Rebalance every day, 1 hour after market open.
-    schedule_function(my_rebalance, date_rules.every_day(), time_rules.market_open(hours=1))
-
-    # Record tracking variables at the end of each day.
-    schedule_function(my_record_vars, date_rules.every_day(), time_rules.market_close())
-
     # Create our dynamic stock selector.
     attach_pipeline(make_pipeline(), 'my_pipeline')
 
@@ -50,21 +44,3 @@ def make_pipeline():
         }
     )
     return pipe
-
-def my_assign_weights(context, data):
-    """
-    Assign weights to securities that we want to order.
-    """
-    pass
-
-def my_rebalance(context, data):
-    """
-    Execute orders according to our schedule_function() timing. 
-    """
-    pass
-
-def my_record_vars(context, data):
-    """
-    Plot variables at the end of each day.
-    """
-    pass
