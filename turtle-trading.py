@@ -28,6 +28,18 @@ def before_trading_start(context, data):
     """
     Process data before every market open.
     """
+    set_markets(context)
+
+def handle_data(context, data):
+    """
+    Process data every minute.
+    """
+    pass
+
+def set_markets(context):
+    """
+    Set markets that are trading.
+    """
     markets = context.markets[:]
     
     for market in markets:
@@ -39,9 +51,3 @@ def before_trading_start(context, data):
             )
             
     assert(len(context.markets) == 14)
-
-def handle_data(context, data):
-    """
-    Process data every minute.
-    """
-    pass
