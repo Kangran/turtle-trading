@@ -6,7 +6,7 @@ from quantopian.pipeline.filters.morningstar import Q1500US
 
 def initialize(context):
     """
-    Called once at the start of the algorithm.
+    Set up algorithm.
     """
     # Rebalance every day, 1 hour after market open.
     schedule_function(my_rebalance, date_rules.every_day(), time_rules.market_open(hours=1))
@@ -16,6 +16,21 @@ def initialize(context):
 
     # Create our dynamic stock selector.
     attach_pipeline(make_pipeline(), 'my_pipeline')
+
+def handle_data(context, data):
+    """
+    Process data every minute.
+    """
+    pass
+
+def before_trading_start(context, data):
+    """
+    Define universe before every market open.
+    """
+    context.output = pipeline_output('my_pipeline')
+
+    # These are the securities that we are interested in trading each day.
+    context.security_list = context.output.index
 
 def make_pipeline():
     """
@@ -36,15 +51,6 @@ def make_pipeline():
     )
     return pipe
 
-def before_trading_start(context, data):
-    """
-    Called every day before market open.
-    """
-    context.output = pipeline_output('my_pipeline')
-
-    # These are the securities that we are interested in trading each day.
-    context.security_list = context.output.index
-
 def my_assign_weights(context, data):
     """
     Assign weights to securities that we want to order.
@@ -60,11 +66,5 @@ def my_rebalance(context, data):
 def my_record_vars(context, data):
     """
     Plot variables at the end of each day.
-    """
-    pass
-
-def handle_data(context, data):
-    """
-    Called every minute.
     """
     pass
