@@ -22,8 +22,24 @@ def initialize(context):
         continuous_future('HU')
     ]
 
+def before_trading_start(context, data):
+    """
+    Process data before every market open.
+    """
+    markets = context.markets[:]
+    
+    for market in markets:
+        if market.end_date < get_datetime():
+            context.markets.remove(market)
+            log.info(
+                '%s stopped trading. Deleted from markets.'
+                % market.root_symbol
+            )
+            
+    assert(len(context.markets) == 14)
+
 def handle_data(context, data):
     """
     Process data every minute.
     """
-    log.info(context.markets)
+    pass
