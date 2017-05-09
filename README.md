@@ -49,3 +49,8 @@ See https://github.com/vyq/turtle-trading/raw/master/the-original-turtle-trading
     - Trading research
 - Warning
     - Best advice comes from those who are not selling it and are making money trading
+
+# reflect
+Markets are fixed or dynamic
+- Fixed markets provide consistency over time
+- Dynamic markets generate ideas over time
