@@ -21,6 +21,8 @@ def initialize(context):
         continuous_future('HO'),
         continuous_future('HU')
     ]
+    
+    assert(len(context.markets) == 16)
 
 def before_trading_start(context, data):
     """
