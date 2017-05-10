@@ -38,13 +38,14 @@ def handle_data(context, data):
 
 def set_markets(context):
     """
-    Set markets that are trading.
+    Set markets for trading.
     """
     markets = context.markets[:]
     
     for market in markets:
         if market.end_date < get_datetime():
             context.markets.remove(market)
+            
             log.info(
                 '%s stopped trading. Deleted from markets.'
                 % market.root_symbol
