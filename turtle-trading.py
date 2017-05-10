@@ -29,6 +29,7 @@ def before_trading_start(context, data):
     Process data before every market open.
     """
     set_markets(context)
+    get_prices(context, data)
 
 def handle_data(context, data):
     """
@@ -52,3 +53,20 @@ def set_markets(context):
             )
             
     assert(len(context.markets) == 14)
+
+def get_prices(context, data):
+    """
+    Get historical prices.
+    """
+    fields = ['price', 'high', 'low', 'close']
+    bars = 57
+    frequency = '1d'
+    
+    context.prices = data.history(
+        context.markets,
+        fields,
+        bars,
+        frequency
+    )
+    
+    assert(context.prices.shape == (4, 57, 14))
