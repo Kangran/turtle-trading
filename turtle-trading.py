@@ -80,7 +80,7 @@ def validate_prices(context):
     """
     Validate prices.
     """
-    pass
+    context.prices.dropna(axis=2, inplace=True)
 
 def compute_volatility(context):
     """
