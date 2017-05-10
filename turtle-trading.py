@@ -1,3 +1,6 @@
+# https://www.quantopian.com/help#ide-module-import
+from talib import ATR
+
 def initialize(context):
     """
     Set up algorithm.
@@ -30,6 +33,8 @@ def before_trading_start(context, data):
     """
     set_markets(context)
     get_prices(context, data)
+    validate_prices(context)
+    compute_volatility(context)
 
 def handle_data(context, data):
     """
@@ -70,3 +75,15 @@ def get_prices(context, data):
     )
     
     assert(context.prices.shape == (4, 57, 14))
+
+def validate_prices(context):
+    """
+    Validate prices.
+    """
+    pass
+
+def compute_volatility(context):
+    """
+    Compute volatility, or N.
+    """
+    pass
