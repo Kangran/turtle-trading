@@ -8,12 +8,15 @@ def initialize(context):
     set_markets(context)
     schedule_function(
         func=get_prices,
-        time_rule=time_rules.market_open(hours=0, minutes=1)
+        time_rule=time_rules.market_open(
+            hours=0,
+            minutes=1
+        )
     )
 
 def before_trading_start(context, data):
     """
-    Process data before every market open.
+    Process data before market open.
     """
     pass
 
