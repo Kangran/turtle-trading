@@ -4,6 +4,12 @@ Profit using trend trading
 # strategy
 See https://github.com/vyq/turtle-trading/raw/master/the-original-turtle-trading-rules.pdf
 
+# backtest
+- Start date: 2017-02-27
+- End date: 2017-03-31
+- Cash: USD 1,000,000
+- Trading calendar: US Futures
+
 # set-markets
 Set markets for trading. Intersect Quantopian futures universe with Turtle Trading markets. Remove markets that stopped trading.
 
