@@ -6,6 +6,7 @@ def initialize(context):
     Set up algorithm.
     """
     set_markets(context)
+    
     schedule_function(
         func=get_prices,
         time_rule=time_rules.market_open(
@@ -32,22 +33,22 @@ def set_markets(context):
     """
     # https://www.quantopian.com/help#available-futures
     symbols = [
-        'US',
-        'TY',
-        'SB',
-        'SF',
         'BP',
-        'JY',
         'CD',
-        'SP',
-        'ED',
-        'TB',
-        'GC',
-        'SV',
-        'HG',
         'CL',
+        'ED',
+        'GC',
+        'HG',
         'HO',
         'HU'
+        'JY',
+        'SB',
+        'SF',
+        'SP',
+        'SV',
+        'TB',
+        'TY',
+        'US',
     ]
     
     context.markets = map(
