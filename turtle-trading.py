@@ -6,7 +6,7 @@ def initialize(context):
     Set up algorithm.
     """
     # https://www.quantopian.com/help#available-futures
-    markets = [
+    context.symbols = [
         'US',
         'TY',
         'SB',
@@ -27,7 +27,7 @@ def initialize(context):
     
     context.markets = map(
         lambda market: continuous_future(market),
-        markets
+        context.symbols
     )
     
     assert(len(context.markets) == 16)
@@ -86,6 +86,26 @@ def validate_prices(context):
     Validate prices.
     """
     context.prices.dropna(axis=2, inplace=True)
+    
+    validated_markets = map(
+        lambda market: market.root_symbol,
+        context.prices.axes[2]
+    )
+    
+    markets = map(
+        lambda market: market.root_symbol,
+        context.markets
+    )
+    
+    dropped_markets = list(
+        set(markets) - set(validated_markets)
+    )
+    
+    if dropped_markets:
+        log.info(
+            'Null prices for %s. Dropped markets.'
+            % ', '.join(dropped_markets)
+        )
 
 def compute_volatility(context):
     """
