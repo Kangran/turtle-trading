@@ -40,7 +40,7 @@ def set_markets(context):
         'GC',
         'HG',
         'HO',
-        'HU'
+        'HU',
         'JY',
         'SB',
         'SF',
@@ -48,7 +48,7 @@ def set_markets(context):
         'SV',
         'TB',
         'TY',
-        'US',
+        'US'
     ]
     
     context.markets = map(
