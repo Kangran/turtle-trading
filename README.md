@@ -17,7 +17,7 @@ Suppress null warnings after first log message: https://www.quantopian.com/posts
 Set up algorithm. Executes at 1970-01-01 7 PM UTC-4. Intersect Quantopian futures universe with Turtle Trading markets. Set markets as continuous futures to allow access to a rolling window of futures contracts.
 
 # before-trading-start
-Process data before every market open. Executes at 8:45 AM UTC-4.
+Process data before market open. Executes at 8:45 AM UTC-4.
 
 # handle-data
 Process data every minute. Executes from 6:31 AM to 5 PM UTC-4.
@@ -45,10 +45,10 @@ Modules: https://www.quantopian.com/help#ide-module-import
 
 # what
 - Components of a complete trading system
-    - Markets: What to buy or sell
+    - Markets: What to trade
         - High trading volume
         - Trend well
-    - Position sizing: How much to buy or sell
+    - Position sizing: How much to trade
         - Diversification
         - Money management
         - Risk limit
@@ -56,17 +56,17 @@ Modules: https://www.quantopian.com/help#ide-module-import
             - Closely correlated markets: 6 units
             - Loosely correlated markets: 10 units
             - Single direction: 12 units
-    - Entries: When to buy or sell
+    - Entries: When to enter trade
         - Exact price and market conditions to enter
         - Consistent in taking entry signals
-    - Stops: When to get out of a losing position
+    - Stops: When to cut loss
         - Cut loss
         - Define point to get out before entering
         - Tighten stops based on 2 times volatility from previous fill price, or use 0.5 times volatility for each unit
-    - Exits: When to get out of a winning position
+    - Exits: When to exit trade
         - Maintain discipline to exit
         - Do not exit early
-    - Tactics: How to buy or sell
+    - Tactics: How to trade
         - Do not place stop orders
         - Use limit orders
         - Wait for temporary price reversal before placing orders
