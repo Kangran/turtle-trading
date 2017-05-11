@@ -63,8 +63,8 @@ def get_prices(context, data):
     """
     Get historical prices.
     """
-    fields = ['price', 'high', 'low', 'close']
-    bars = 57
+    fields = ['high', 'low', 'close']
+    bars = 22
     frequency = '1d'
     
     context.prices = data.history(
@@ -74,7 +74,7 @@ def get_prices(context, data):
         frequency
     )
     
-    assert(context.prices.shape == (4, 57, 14))
+    assert(context.prices.shape == (3, 22, 14))
 
 def validate_prices(context):
     """
