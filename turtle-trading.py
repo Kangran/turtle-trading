@@ -6,7 +6,7 @@ def initialize(context):
     Set up algorithm.
     """
     # https://www.quantopian.com/help#available-futures
-    context.symbols = [
+    symbols = [
         'US',
         'TY',
         'SB',
@@ -27,7 +27,7 @@ def initialize(context):
     
     context.markets = map(
         lambda market: continuous_future(market),
-        context.symbols
+        symbols
     )
     
     assert(len(context.markets) == 16)
@@ -39,7 +39,7 @@ def before_trading_start(context, data):
     set_markets(context)
     get_prices(context, data)
     validate_prices(context)
-    compute_volatility(context)
+    compute_average_true_range(context)
 
 def handle_data(context, data):
     """
@@ -107,8 +107,8 @@ def validate_prices(context):
             % ', '.join(dropped_markets)
         )
 
-def compute_volatility(context):
+def compute_average_true_range(context):
     """
-    Compute volatility, or N.
+    Compute average true range, or N.
     """
     pass
