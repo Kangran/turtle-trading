@@ -5,9 +5,12 @@ Profit using trend trading
 See https://github.com/vyq/turtle-trading/raw/master/the-original-turtle-trading-rules.pdf
 
 # set-markets
-Set markets for trading. Intersect Quantopian futures with Turtle Trading markets. Remove markets that stopped trading.
+Set markets for trading. Intersect Quantopian futures universe with Turtle Trading markets. Remove markets that stopped trading.
 
 Universe: https://www.quantopian.com/help#available-futures
+
+# get-prices
+Get historical prices. Get high, low, and close. Get 22 daily bars required for computing average true range.
 
 # who
 - More people making money selling ways to make money trading than there are people actually making money trading
