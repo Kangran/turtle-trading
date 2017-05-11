@@ -5,10 +5,13 @@ Profit using trend trading
 See https://github.com/vyq/turtle-trading/raw/master/the-original-turtle-trading-rules.pdf
 
 # backtest
+Parameters
 - Start date: 2017-02-27
 - End date: 2017-03-31
 - Cash: USD 1,000,000
 - Trading calendar: US Futures
+
+Null warnings are suppressed after the first log message: https://www.quantopian.com/posts/warn-numpy-slash-lib-slash-nanfunctions-dot-py-319-runtimewarning-all-nan-slice-encountered
 
 # set-markets
 Set markets for trading. Intersect Quantopian futures universe with Turtle Trading markets. Remove markets that stopped trading.
