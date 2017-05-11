@@ -16,7 +16,16 @@ Set markets for trading. Intersect Quantopian futures universe with Turtle Tradi
 Universe: https://www.quantopian.com/help#available-futures
 
 # get-prices
-Get historical prices. Get high, low, and close. Get 22 daily bars required for computing average true range.
+Get historical prices. Get high, low, and close. Get 22 daily bars for computing average true range.
+
+# validate-prices
+Drop markets with null prices.
+
+# compute-average-true-range
+Compute average true range, or N, using ATR in TA-Lib.
+
+Average true range: https://mrjbq7.github.io/ta-lib/func_groups/volatility_indicators.html
+Modules: https://www.quantopian.com/help#ide-module-import
 
 # who
 - More people making money selling ways to make money trading than there are people actually making money trading
