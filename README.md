@@ -87,5 +87,8 @@ Modules: https://www.quantopian.com/help#ide-module-import
 
 # reflect
 Markets are fixed or dynamic
-- Fixed markets provide consistency over time
+- Fixed markets allow consistency over time
 - Dynamic markets generate ideas over time
+
+Context has limitations
+- Cannot get 3-dimensional array (3, 22, 14) in `handle_data`, though it was saved to context in `before_trading_start`
