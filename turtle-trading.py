@@ -5,6 +5,25 @@ def initialize(context):
     """
     Set up algorithm.
     """
+    set_markets(context)
+
+def before_trading_start(context, data):
+    """
+    Process data before every market open.
+    """
+    get_prices(context, data)
+    validate_prices(context)
+
+def handle_data(context, data):
+    """
+    Process data every minute.
+    """
+    compute_average_true_range(context)
+
+def set_markets(context):
+    """
+    Set markets for trading.
+    """
     # https://www.quantopian.com/help#available-futures
     symbols = [
         'US',
@@ -30,26 +49,6 @@ def initialize(context):
         symbols
     )
     
-    assert(len(context.markets) == 16)
-
-def before_trading_start(context, data):
-    """
-    Process data before every market open.
-    """
-    set_markets(context)
-    get_prices(context, data)
-    validate_prices(context)
-
-def handle_data(context, data):
-    """
-    Process data every minute.
-    """
-    compute_average_true_range(context)
-
-def set_markets(context):
-    """
-    Set markets for trading.
-    """
     markets = context.markets[:]
     
     for market in markets:
