@@ -39,13 +39,12 @@ def before_trading_start(context, data):
     set_markets(context)
     get_prices(context, data)
     validate_prices(context)
-    compute_average_true_range(context)
 
 def handle_data(context, data):
     """
     Process data every minute.
     """
-    pass
+    compute_average_true_range(context)
 
 def set_markets(context):
     """
@@ -103,7 +102,7 @@ def validate_prices(context):
     
     if dropped_markets:
         log.info(
-            'Null prices for %s. Dropped markets.'
+            'Null prices for %s. Dropped from prices.'
             % ', '.join(dropped_markets)
         )
 
