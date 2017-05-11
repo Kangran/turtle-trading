@@ -91,5 +91,6 @@ Markets are fixed or dynamic
 - Dynamic markets generate ideas over time
 
 Context has limitations
-- 3-dimensional array saved to context in `before_trading_start()` is not accessible in `handle_data()`
-- Scalar value saved in `initialize()` is accessible in `handle_data()`
+- Scalar value saved to context in `initialize()` is accessible in `handle_data()`
+- Scalar value saved to context in `before_trading_start()` or `schedule_function()` is not accessible in `handle_data()`
+- 3-dimensional array saved to context in `before_trading_start()` or `schedule_function()` is not accessible in `handle_data()`
