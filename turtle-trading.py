@@ -5,7 +5,6 @@ def initialize(context):
     """
     Initialize algorithm.
     """
-    # https://www.quantopian.com/help#available-futures
     context.symbols = [
         'BP',
         'CD',
@@ -40,12 +39,12 @@ def handle_data(context, data):
     """
     Process data every minute.
     """
-    pass
+    # pass
     if context.markets is not None:
-        get_historical_prices(context, data)
+        get_prices(context, data)
         validate_prices(context)
-    
-    # context.prices = context.prices.transpose(1, 2, 0)
+        context.prices = context.prices.transpose(2, 1, 0)
+            
     # context.prices[get_datetime()] = current_prices
     
     # compute_average_true_range(context)
@@ -74,9 +73,9 @@ def validate_markets(context, data):
     if context.is_debug:
         assert(len(context.markets) == 14)
 
-def get_historical_prices(context, data):
+def get_prices(context, data):
     """
-    Get historical prices.
+    Get prices.
     """
     fields = ['high', 'low', 'close']
     bars = 22
