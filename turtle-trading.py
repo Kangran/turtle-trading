@@ -84,6 +84,9 @@ def validate_markets(context):
                 '%s stopped trading. Dropped.'
                 % market.root_symbol
             )
+            
+    if context.is_debug:
+        assert(len(context.markets) == 14)
 
 def get_historical_prices(context, data):
     """
@@ -133,6 +136,10 @@ def validate_prices(context):
         lambda market: continuous_future(market),
         validated_markets
     )
+    
+    if context.is_debug:
+        assert(context.prices.shape[0] == 3)
+        assert(context.prices.shape[1] == 22)
 
 def compute_average_true_range(context):
     """
