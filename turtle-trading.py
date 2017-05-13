@@ -27,6 +27,9 @@ def initialize(context):
         'US'
     ]
     
+    context.markets = None
+    context.prices = None
+    
     schedule_function(
         func=validate_markets,
         time_rule=time_rules.market_open(minutes=1)
