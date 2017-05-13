@@ -5,7 +5,7 @@ def initialize(context):
     """
     Initialize algorithm.
     """
-    set_markets(context)
+    set_symbols(context)
     
     context.is_market_stale = True
     context.is_price_stale = True
@@ -37,12 +37,12 @@ def handle_data(context, data):
     
     compute_average_true_range(context)
 
-def set_markets(context):
+def set_symbols(context):
     """
-    Set markets for trading.
+    Set symbols.
     """
     # https://www.quantopian.com/help#available-futures
-    symbols = [
+    context.symbols = [
         'BP',
         'CD',
         'CL',
@@ -60,18 +60,18 @@ def set_markets(context):
         'TY',
         'US'
     ]
-    
-    context.markets = map(
-        lambda market: continuous_future(market),
-        symbols
-    )
             
-    assert(len(context.markets) == 16)
+    assert(len(context.symbols) == 16)
 
 def validate_markets(context):
     """
     Drop markets that stopped trading.
     """
+    context.markets = map(
+        lambda market: continuous_future(market),
+        context.symbols
+    )
+    
     markets = context.markets[:]
     
     for market in markets:
@@ -125,6 +125,11 @@ def validate_prices(context):
             'Null prices for %s. Dropped.'
             % ', '.join(dropped_markets)
         )
+        
+    context.markets = map(
+        lambda market: continuous_future(market),
+        validated_markets
+    )
 
 def compute_average_true_range(context):
     """
