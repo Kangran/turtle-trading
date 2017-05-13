@@ -32,14 +32,6 @@ def initialize(context):
         func=validate_markets,
         time_rule=time_rules.market_open(minutes=1)
     )
-    schedule_function(
-        func=get_historical_prices,
-        time_rule=time_rules.market_open(minutes=1)
-    )
-    schedule_function(
-        func=validate_prices,
-        time_rule=time_rules.market_open(minutes=1)
-    )
     
     if context.is_debug:
         assert(len(context.symbols) == 16)
@@ -49,11 +41,9 @@ def handle_data(context, data):
     Process data every minute.
     """
     pass
-    # if context.markets is not None:
-    #     current_prices = data.current(
-    #         context.markets,
-    #         fields=['high', 'low', 'close']
-    #     )
+    if context.markets is not None:
+        get_historical_prices(context, data)
+        validate_prices(context)
     
     # context.prices = context.prices.transpose(1, 2, 0)
     # context.prices[get_datetime()] = current_prices
@@ -100,9 +90,10 @@ def get_historical_prices(context, data):
     )
     
     if context.is_debug:
-        assert(context.prices.shape == (3, 22, 14))
+        assert(context.prices.shape[0] == 3)
+        assert(context.prices.shape[1] == 22)
 
-def validate_prices(context, data):
+def validate_prices(context):
     """
     Drop markets with null prices.
     """
