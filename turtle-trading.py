@@ -9,7 +9,28 @@ def initialize(context):
     context.is_market_stale = True
     context.is_price_stale = True
     
-    set_symbols(context)
+    # https://www.quantopian.com/help#available-futures
+    context.symbols = [
+        'BP',
+        'CD',
+        'CL',
+        'ED',
+        'GC',
+        'HG',
+        'HO',
+        'HU',
+        'JY',
+        'SB',
+        'SF',
+        'SP',
+        'SV',
+        'TB',
+        'TY',
+        'US'
+    ]
+    
+    if context.is_debug:
+        assert(len(context.symbols) == 16)
 
 def before_trading_start(context, data):
     """
@@ -40,33 +61,6 @@ def handle_data(context, data):
     context.prices[get_datetime()] = current_prices
     
     compute_average_true_range(context)
-
-def set_symbols(context):
-    """
-    Set symbols.
-    """
-    # https://www.quantopian.com/help#available-futures
-    context.symbols = [
-        'BP',
-        'CD',
-        'CL',
-        'ED',
-        'GC',
-        'HG',
-        'HO',
-        'HU',
-        'JY',
-        'SB',
-        'SF',
-        'SP',
-        'SV',
-        'TB',
-        'TY',
-        'US'
-    ]
-            
-    if context.is_debug:
-        assert(len(context.symbols) == 16)
 
 def validate_markets(context):
     """
