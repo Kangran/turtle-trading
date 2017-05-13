@@ -19,7 +19,7 @@ Initialize algorithm. Executes at 1970-01-01 7 PM UTC-4. Intersect Quantopian fu
 Universe: https://www.quantopian.com/help#available-futures
 
 # handle-data
-Process data every minute. Executes from 6:31 AM to 5 PM UTC-4.
+Process data every minute. Executes from 6:31 AM to 5 PM UTC-4. Get prices. Validate prices. Transpose prices.
 
 # validate-markets
 Drop markets that stopped trading. Set markets as continuous futures to allow access to a rolling window of futures contracts.
@@ -75,8 +75,6 @@ Modules: https://www.quantopian.com/help#ide-module-import
     - Trading psychology
     - Money management
     - Trading research
-- Warning
-    - Best advice comes from those who are not selling it and are making money trading
 
 # reflect
 Markets are fixed or dynamic:
