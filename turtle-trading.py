@@ -6,14 +6,6 @@ def initialize(context):
     Set up algorithm.
     """
     set_markets(context)
-    
-    schedule_function(
-        func=get_prices,
-        time_rule=time_rules.market_open(
-            hours=0,
-            minutes=1
-        )
-    )
 
 def before_trading_start(context, data):
     """
@@ -25,6 +17,8 @@ def handle_data(context, data):
     """
     Process data every minute.
     """
+    get_prices(context, data)
+    validate_prices(context)
     compute_average_true_range(context)
 
 def set_markets(context):
@@ -85,8 +79,6 @@ def get_prices(context, data):
     )
     
     assert(context.prices.shape == (3, 22, 14))
-    
-    validate_prices(context)
 
 def validate_prices(context):
     """
