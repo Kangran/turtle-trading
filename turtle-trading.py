@@ -75,10 +75,11 @@ def validate_markets(context, data):
         if market.end_date < get_datetime():
             context.markets.remove(market)
             
-            log.info(
-                '%s stopped trading. Dropped.'
-                % market.root_symbol
-            )
+            if context.is_debug:
+                log.debug(
+                    '%s stopped trading. Dropped.'
+                    % market.root_symbol
+                )
             
     if context.is_debug:
         assert(len(context.markets) == 14)
@@ -121,8 +122,8 @@ def validate_prices(context, data):
         set(markets) - set(validated_markets)
     )
     
-    if dropped_markets:
-        log.info(
+    if context.is_debug and dropped_markets:
+        log.debug(
             'Null prices for %s. Dropped.'
             % ', '.join(dropped_markets)
         )
