@@ -27,11 +27,6 @@ def initialize(context):
         'US'
     ]
     
-    context.markets = map(
-        lambda market: continuous_future(market),
-        context.symbols
-    )
-    
     schedule_function(
         func=validate_markets,
         time_rule=time_rules.market_open(minutes=1)
@@ -39,6 +34,11 @@ def initialize(context):
     
     schedule_function(
         func=get_historical_prices,
+        time_rule=time_rules.market_open(minutes=1)
+    )
+    
+    schedule_function(
+        func=validate_prices,
         time_rule=time_rules.market_open(minutes=1)
     )
     
@@ -76,6 +76,11 @@ def validate_markets(context, data):
     """
     Drop markets that stopped trading.
     """
+    context.markets = map(
+        lambda market: continuous_future(market),
+        context.symbols
+    )
+    
     markets = context.markets[:]
     
     for market in markets:
@@ -108,7 +113,7 @@ def get_historical_prices(context, data):
     if context.is_debug:
         assert(context.prices.shape == (3, 22, 14))
 
-def validate_prices(context):
+def validate_prices(context, data):
     """
     Drop markets with null prices.
     """
