@@ -27,7 +27,7 @@ def handle_data(context, data):
         context.is_market_stale = False
         
     if context.is_price_stale:
-        get_prices(context, data)
+        get_historical_prices(context, data)
         validate_prices(context)
         
         context.is_price_stale = False
@@ -80,7 +80,7 @@ def validate_markets(context):
                 % market.root_symbol
             )
 
-def get_prices(context, data):
+def get_historical_prices(context, data):
     """
     Get historical prices.
     """
