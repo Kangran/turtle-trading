@@ -3,7 +3,7 @@ from talib import ATR
 
 def initialize(context):
     """
-    Set up algorithm.
+    Initialize algorithm.
     """
     set_markets(context)
     
@@ -12,7 +12,7 @@ def initialize(context):
 
 def before_trading_start(context, data):
     """
-    Process data before market open.
+    Set flags before market open.
     """
     context.is_market_stale = True
     context.is_price_stale = True
@@ -67,7 +67,7 @@ def set_markets(context):
 
 def validate_markets(context):
     """
-    Validate markets.
+    Drop markets that stopped trading.
     """
     markets = context.markets[:]
     
@@ -76,7 +76,7 @@ def validate_markets(context):
             context.markets.remove(market)
             
             log.info(
-                '%s stopped trading. Dropped from markets.'
+                '%s stopped trading. Dropped.'
                 % market.root_symbol
             )
 
@@ -99,7 +99,7 @@ def get_prices(context, data):
 
 def validate_prices(context):
     """
-    Validate prices.
+    Drop markets with null prices.
     """
     context.prices.dropna(axis=2, inplace=True)
     
@@ -119,7 +119,7 @@ def validate_prices(context):
     
     if dropped_markets:
         log.info(
-            'Null prices for %s. Dropped from prices.'
+            'Null prices for %s. Dropped.'
             % ', '.join(dropped_markets)
         )
 
