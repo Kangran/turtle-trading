@@ -6,19 +6,23 @@ def initialize(context):
     Set up algorithm.
     """
     set_markets(context)
+    context.is_price_stale = True
 
 def before_trading_start(context, data):
     """
     Process data before market open.
     """
-    pass
+    context.is_price_stale = True
 
 def handle_data(context, data):
     """
     Process data every minute.
     """
-    get_prices(context, data)
-    validate_prices(context)
+    if context.is_price_stale:
+        get_prices(context, data)
+        validate_prices(context)
+        context.is_price_stale = False
+        
     compute_average_true_range(context)
 
 def set_markets(context):
