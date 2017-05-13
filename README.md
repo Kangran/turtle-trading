@@ -14,20 +14,23 @@ Parameters
 Suppress null warnings after first log message: https://www.quantopian.com/posts/warn-numpy-slash-lib-slash-nanfunctions-dot-py-319-runtimewarning-all-nan-slice-encountered
 
 # initialize
-Set up algorithm. Executes at 1970-01-01 7 PM UTC-4. Intersect Quantopian futures universe with Turtle Trading markets. Set markets as continuous futures to allow access to a rolling window of futures contracts.
+Initialize algorithm. Executes at 1970-01-01 7 PM UTC-4. Intersect Quantopian futures universe with Turtle Trading markets. Set markets as continuous futures to allow access to a rolling window of futures contracts. Set flags for data freshness.
 
 # before-trading-start
-Process data before market open. Executes at 8:45 AM UTC-4.
+Set flags before market open. Executes at 8:45 AM UTC-4.
 
 # handle-data
 Process data every minute. Executes from 6:31 AM to 5 PM UTC-4.
 
 # set-markets
-Set markets for trading. Remove markets that stopped trading.
+Set markets for trading.
 
 Universe: https://www.quantopian.com/help#available-futures
 
-# get-prices
+# drop-markets
+Drop markets that stopped trading.
+
+# get-historical-prices
 Get historical prices. Get high, low, and close. Get 22 daily bars for computing average true range.
 
 # validate-prices
