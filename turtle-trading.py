@@ -23,15 +23,18 @@ def handle_data(context, data):
     """
     if context.is_market_stale:
         validate_markets(context)
-        
         context.is_market_stale = False
         
     if context.is_price_stale:
         get_historical_prices(context, data)
         validate_prices(context)
-        
         context.is_price_stale = False
         
+    current_prices = data.current(
+        context.markets,
+        fields=['high', 'low']
+    )
+    
     compute_average_true_range(context)
 
 def set_markets(context):
