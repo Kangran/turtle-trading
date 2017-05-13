@@ -52,11 +52,11 @@ def handle_data(context, data):
     """
     Process data every minute.
     """
-    pass
-    # current_prices = data.current(
-    #     context.markets,
-    #     fields=['high', 'low', 'close']
-    # )
+    if context.markets is not None:
+        current_prices = data.current(
+            context.markets,
+            fields=['high', 'low', 'close']
+        )
     
     # context.prices = context.prices.transpose(1, 2, 0)
     # context.prices[get_datetime()] = current_prices
