@@ -5,10 +5,11 @@ def initialize(context):
     """
     Initialize algorithm.
     """
-    set_symbols(context)
-    
+    context.is_debug = True
     context.is_market_stale = True
     context.is_price_stale = True
+    
+    set_symbols(context)
 
 def before_trading_start(context, data):
     """
@@ -61,7 +62,8 @@ def set_symbols(context):
         'US'
     ]
             
-    assert(len(context.symbols) == 16)
+    if context.is_debug:
+        assert(len(context.symbols) == 16)
 
 def validate_markets(context):
     """
@@ -98,7 +100,8 @@ def get_historical_prices(context, data):
         frequency
     )
     
-    assert(context.prices.shape == (3, 22, 14))
+    if context.is_debug:
+        assert(context.prices.shape == (3, 22, 14))
 
 def validate_prices(context):
     """
