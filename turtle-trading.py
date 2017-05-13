@@ -33,8 +33,11 @@ def handle_data(context, data):
         
     current_prices = data.current(
         context.markets,
-        fields=['high', 'low']
+        fields=['high', 'low', 'close']
     )
+    
+    context.prices = context.prices.transpose(1, 2, 0)
+    context.prices[get_datetime()] = current_prices
     
     compute_average_true_range(context)
 
