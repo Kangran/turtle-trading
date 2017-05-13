@@ -6,21 +6,30 @@ def initialize(context):
     Set up algorithm.
     """
     set_markets(context)
+    
+    context.is_market_stale = True
     context.is_price_stale = True
 
 def before_trading_start(context, data):
     """
     Process data before market open.
     """
+    context.is_market_stale = True
     context.is_price_stale = True
 
 def handle_data(context, data):
     """
     Process data every minute.
     """
+    if context.is_market_stale:
+        validate_markets(context)
+        
+        context.is_market_stale = False
+        
     if context.is_price_stale:
         get_prices(context, data)
         validate_prices(context)
+        
         context.is_price_stale = False
         
     compute_average_true_range(context)
@@ -53,7 +62,13 @@ def set_markets(context):
         lambda market: continuous_future(market),
         symbols
     )
-    
+            
+    assert(len(context.markets) == 16)
+
+def validate_markets(context):
+    """
+    Validate markets.
+    """
     markets = context.markets[:]
     
     for market in markets:
@@ -61,11 +76,9 @@ def set_markets(context):
             context.markets.remove(market)
             
             log.info(
-                '%s stopped trading. Deleted from markets.'
+                '%s stopped trading. Dropped from markets.'
                 % market.root_symbol
             )
-            
-    assert(len(context.markets) == 14)
 
 def get_prices(context, data):
     """
