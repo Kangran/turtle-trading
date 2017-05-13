@@ -45,23 +45,11 @@ def initialize(context):
     if context.is_debug:
         assert(len(context.symbols) == 16)
 
-def before_trading_start(context, data):
-    """
-    Set flags before market open.
-    """
-    context.is_market_stale = True
-    context.is_price_stale = True
-
 def handle_data(context, data):
     """
     Process data every minute.
     """
     pass
-    # if context.is_price_stale:
-    #     get_historical_prices(context, data)
-    #     validate_prices(context)
-    #     context.is_price_stale = False
-        
     # current_prices = data.current(
     #     context.markets,
     #     fields=['high', 'low', 'close']
