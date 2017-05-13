@@ -37,6 +37,11 @@ def initialize(context):
         time_rule=time_rules.market_open(minutes=1)
     )
     
+    schedule_function(
+        func=get_historical_prices,
+        time_rule=time_rules.market_open(minutes=1)
+    )
+    
     if context.is_debug:
         assert(len(context.symbols) == 16)
 
