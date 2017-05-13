@@ -5,8 +5,6 @@ def initialize(context):
     """
     Initialize algorithm.
     """
-    context.is_debug = True
-    
     # https://www.quantopian.com/help#available-futures
     context.symbols = [
         'BP',
@@ -26,20 +24,18 @@ def initialize(context):
         'TY',
         'US'
     ]
-    
     context.markets = None
     context.prices = None
+    context.is_debug = True
     
     schedule_function(
         func=validate_markets,
         time_rule=time_rules.market_open(minutes=1)
     )
-    
     schedule_function(
         func=get_historical_prices,
         time_rule=time_rules.market_open(minutes=1)
     )
-    
     schedule_function(
         func=validate_prices,
         time_rule=time_rules.market_open(minutes=1)
@@ -52,11 +48,12 @@ def handle_data(context, data):
     """
     Process data every minute.
     """
-    if context.markets is not None:
-        current_prices = data.current(
-            context.markets,
-            fields=['high', 'low', 'close']
-        )
+    pass
+    # if context.markets is not None:
+    #     current_prices = data.current(
+    #         context.markets,
+    #         fields=['high', 'low', 'close']
+    #     )
     
     # context.prices = context.prices.transpose(1, 2, 0)
     # context.prices[get_datetime()] = current_prices
