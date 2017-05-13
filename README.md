@@ -94,3 +94,5 @@ Context has limitations
 - Scalar value saved to context in `handle_data()` is accessible in `before_trading_start()` and `schedule_function()`
 - Scalar value saved to context in `before_trading_start()` or `schedule_function()` is not accessible in `handle_data()`
 - 3-dimensional array saved to context in `before_trading_start()` or `schedule_function()` is not accessible in `handle_data()`
+
+`data.history()` contains data from the first minute of the current market day, if called in `handle_data()`
