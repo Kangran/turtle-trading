@@ -6,8 +6,6 @@ def initialize(context):
     Initialize algorithm.
     """
     context.is_debug = True
-    context.is_market_stale = True
-    context.is_price_stale = True
     
     # https://www.quantopian.com/help#available-futures
     context.symbols = [
@@ -29,6 +27,16 @@ def initialize(context):
         'US'
     ]
     
+    context.markets = map(
+        lambda market: continuous_future(market),
+        context.symbols
+    )
+    
+    schedule_function(
+        func=validate_markets,
+        time_rule=time_rules.market_open(minutes=1)
+    )
+    
     if context.is_debug:
         assert(len(context.symbols) == 16)
 
@@ -43,34 +51,26 @@ def handle_data(context, data):
     """
     Process data every minute.
     """
-    if context.is_market_stale:
-        validate_markets(context)
-        context.is_market_stale = False
+    pass
+    # if context.is_price_stale:
+    #     get_historical_prices(context, data)
+    #     validate_prices(context)
+    #     context.is_price_stale = False
         
-    if context.is_price_stale:
-        get_historical_prices(context, data)
-        validate_prices(context)
-        context.is_price_stale = False
-        
-    current_prices = data.current(
-        context.markets,
-        fields=['high', 'low', 'close']
-    )
+    # current_prices = data.current(
+    #     context.markets,
+    #     fields=['high', 'low', 'close']
+    # )
     
-    context.prices = context.prices.transpose(1, 2, 0)
-    context.prices[get_datetime()] = current_prices
+    # context.prices = context.prices.transpose(1, 2, 0)
+    # context.prices[get_datetime()] = current_prices
     
-    compute_average_true_range(context)
+    # compute_average_true_range(context)
 
-def validate_markets(context):
+def validate_markets(context, data):
     """
     Drop markets that stopped trading.
     """
-    context.markets = map(
-        lambda market: continuous_future(market),
-        context.symbols
-    )
-    
     markets = context.markets[:]
     
     for market in markets:
