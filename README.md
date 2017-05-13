@@ -39,10 +39,6 @@ Compute average true range, or N, using ATR in TA-Lib.
 Average true range: https://mrjbq7.github.io/ta-lib/func_groups/volatility_indicators.html
 Modules: https://www.quantopian.com/help#ide-module-import
 
-# who
-- More people making money selling ways to make money trading than there are people actually making money trading
-- Investigate sellers before taking advice or buying courses
-
 # what
 - Components of a complete trading system
     - Markets: What to trade
@@ -92,5 +88,6 @@ Markets are fixed or dynamic
 
 Context has limitations
 - Scalar value saved to context in `initialize()` is accessible in `handle_data()`
+- Scalar value saved to context in `handle_data()` is accessible in `before_trading_start()` and `schedule_function()`
 - Scalar value saved to context in `before_trading_start()` or `schedule_function()` is not accessible in `handle_data()`
 - 3-dimensional array saved to context in `before_trading_start()` or `schedule_function()` is not accessible in `handle_data()`
