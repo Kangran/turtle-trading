@@ -44,7 +44,8 @@ def handle_data(context, data):
         get_prices(context, data)
         validate_prices(context)
         context.prices = context.prices.transpose(2, 1, 0)
-            
+        context.prices = context.prices.reindex()
+        
     # context.prices[get_datetime()] = current_prices
     
     # compute_average_true_range(context)
