@@ -24,7 +24,6 @@ def initialize(context):
     ]
     context.markets = None
     context.prices = None
-    context.average_true_range = {}
     context.is_debug = True
     
     schedule_function(
@@ -43,13 +42,13 @@ def handle_data(context, data):
         get_prices(context, data)
         validate_prices(context)
         
-        if len(context.prices.items) == 3:
-            context.prices = context.prices.transpose(2, 1, 0)
-            context.prices = context.prices.reindex()
-            average_true_range = compute_average_true_range(
-                context,
-                context.markets[0]
-            )
+        context.prices = context.prices.transpose(2, 1, 0)
+        context.prices = context.prices.reindex()
+        
+        average_true_range = compute_average_true_range(
+            context,
+            context.markets[0]
+        )
 
 def validate_markets(context, data):
     """
