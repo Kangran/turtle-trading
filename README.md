@@ -19,7 +19,7 @@ Initialize algorithm. Executes at 1970-01-01 7 PM UTC-4. Intersect Quantopian fu
 Universe: https://www.quantopian.com/help#available-futures
 
 # handle-data
-Process data every minute. Executes from 6:31 AM to 5 PM UTC-4. Get prices. Validate prices. Transpose prices.
+Process data every minute. Executes from 6:31 AM to 5 PM UTC-4. Get prices. Validate prices. Transpose prices. Compute average true range.
 
 # validate-markets
 Drop markets that stopped trading. Set markets as continuous futures to allow access to a rolling window of futures contracts.
