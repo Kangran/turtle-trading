@@ -1,4 +1,3 @@
-# https://www.quantopian.com/help#ide-module-import
 from talib import ATR
 
 def initialize(context):
@@ -25,6 +24,7 @@ def initialize(context):
     ]
     context.markets = None
     context.prices = None
+    context.average_true_range = {}
     context.is_debug = True
     
     schedule_function(
@@ -39,16 +39,17 @@ def handle_data(context, data):
     """
     Process data every minute.
     """
-    # pass
     if context.markets is not None:
         get_prices(context, data)
         validate_prices(context)
-        context.prices = context.prices.transpose(2, 1, 0)
-        context.prices = context.prices.reindex()
         
-    # context.prices[get_datetime()] = current_prices
-    
-    # compute_average_true_range(context)
+        if len(context.prices.items) == 3:
+            context.prices = context.prices.transpose(2, 1, 0)
+            context.prices = context.prices.reindex()
+            average_true_range = compute_average_true_range(
+                context,
+                context.markets[0]
+            )
 
 def validate_markets(context, data):
     """
@@ -128,8 +129,16 @@ def validate_prices(context):
         assert(context.prices.shape[0] == 3)
         assert(context.prices.shape[1] == 22)
 
-def compute_average_true_range(context):
+def compute_average_true_range(context, market):
     """
     Compute average true range, or N.
     """
-    pass
+    rolling_window = 21
+    moving_average = 20
+    
+    return ATR(
+        context.prices[market].high[-rolling_window:],
+        context.prices[market].low[-rolling_window:],
+        context.prices[market].close[-rolling_window:],
+        timeperiod=moving_average
+    )[-1]
