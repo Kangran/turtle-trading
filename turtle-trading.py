@@ -24,6 +24,7 @@ def initialize(context):
     ]
     context.markets = None
     context.prices = None
+    context.contracts = None
     context.is_debug = True
     
     schedule_function(
@@ -39,16 +40,18 @@ def handle_data(context, data):
     Process data every minute.
     """
     if context.markets is not None:
-        get_prices(context, data)
-        validate_prices(context)
+        # get_prices(context, data)
+        # validate_prices(context)
         
-        context.prices = context.prices.transpose(2, 1, 0)
-        context.prices = context.prices.reindex()
+        # context.prices = context.prices.transpose(2, 1, 0)
+        # context.prices = context.prices.reindex()
         
-        average_true_range = compute_average_true_range(
-            context,
-            context.markets[0]
-        )
+        get_contracts(context, data)
+        
+        # average_true_range = compute_average_true_range(
+        #     context,
+        #     context.markets[0]
+        # )
 
 def validate_markets(context, data):
     """
@@ -127,6 +130,17 @@ def validate_prices(context):
     if context.is_debug:
         assert(context.prices.shape[0] == 3)
         assert(context.prices.shape[1] == 22)
+
+def get_contracts(context, data):
+    """
+    Get contracts.
+    """
+    fields = 'contracts'
+    
+    context.contracts = data.current(
+        context.markets,
+        fields
+    )
 
 def compute_average_true_range(context, market):
     """
