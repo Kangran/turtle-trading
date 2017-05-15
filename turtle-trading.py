@@ -163,3 +163,5 @@ def compute_average_true_range(context, market):
     
     if context.is_debug:
         assert(average_true_range > 0)
+        
+    return average_true_range
