@@ -25,6 +25,7 @@ def initialize(context):
     context.markets = None
     context.prices = None
     context.contracts = None
+    context.capital = context.portfolio.starting_cash
     context.capital_risk_per_trade = 0.01
     context.capital_multiplier = 2
     context.is_debug = True
@@ -63,6 +64,15 @@ def handle_data(context, data):
         
         profit = context.portfolio.portfolio_value\
             - context.portfolio.starting_cash
+            
+        if profit < 0:
+            context.capital = context.portfolio.starting_cash\
+                + profit\
+                * context.capital_multiplier
+                
+        trade_size = context.capital\
+            * context.capital_risk_per_trade\
+            / dollar_volatility
 
 def validate_markets(context, data):
     """
