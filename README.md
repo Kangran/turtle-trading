@@ -19,7 +19,7 @@ Initialize algorithm. Executes at 1970-01-01 7 PM UTC-4. Intersect Quantopian fu
 Universe: https://www.quantopian.com/help#available-futures
 
 # handle-data
-Process data every minute. Executes from 6:31 AM to 5 PM UTC-4. Get prices. Validate prices. Transpose prices. Compute average true range.
+Process data every minute. Executes from 6:31 AM to 5 PM UTC-4. Get prices. Validate prices. Transpose prices. Compute average true range. Compute dollar volatility. Compute profit. Compute trade size.
 
 # validate-markets
 Drop markets that stopped trading. Set markets as continuous futures to allow access to a rolling window of futures contracts.
@@ -31,10 +31,13 @@ Get prices. Get high, low, and close. Get 22 daily bars for computing average tr
 Drop markets with null prices. Set markets as validated markets
 
 # compute-average-true-range
-Compute average true range, or N, using ATR in TA-Lib.
+Compute average true range, or N, using ATR in TA-Lib. Use a rolling window that is 1 day larger than the moving average.
 
 Average true range: https://mrjbq7.github.io/ta-lib/func_groups/volatility_indicators.html
 Modules: https://www.quantopian.com/help#ide-module-import
+
+# compute-dollar-volatility
+Compute dollar volatility. Multiply contract `tick_size` by `average_true_range`.
 
 # what
 - Components of a complete trading system
