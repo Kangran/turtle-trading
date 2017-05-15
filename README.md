@@ -90,3 +90,5 @@ Context has limitations:
 `data.history()` contains data from the first minute of the current market day, if called in `handle_data()`.
 
 `before_trading_start()` should not be used for futures as it executes at 8:45 AM UTC-4.
+
+`tick_size` equates to dollars per point.
