@@ -25,6 +25,8 @@ def initialize(context):
     context.markets = None
     context.prices = None
     context.contracts = None
+    context.capital_risk_per_trade = 0.01
+    context.capital_multiplier = 2
     context.is_debug = True
     
     schedule_function(
@@ -58,6 +60,9 @@ def handle_data(context, data):
             context.markets[0],
             average_true_range
         )
+        
+        profit = context.portfolio.portfolio_value\
+            - context.portfolio.starting_cash
 
 def validate_markets(context, data):
     """
