@@ -176,21 +176,11 @@ def compute_dollar_volatility(context, market, average_true_range):
     """
     Compute dollar volatility.
     """
-    contract = context.contracts
-    log.info(contract)
-    # contract = context.contracts[market].contract[0]
+    contract = context.contracts[market]
     
-    # if contract is not None:
-    #     log.info(
-    #         contract.symbol,
-    #         contract.tick_size,
-    #         contract.multiplier,
-    #         contract.auto_close_date
-    #     )
-        
-    # dollar_volatility = contract.tick_size * average_true_range
+    dollar_volatility = contract.tick_size * average_true_range
     
-    # if context.is_debug:
-    #     assert(dollar_volatility > 0)
+    if context.is_debug:
+        assert(dollar_volatility > 0)
         
-    # return dollar_volatility
+    return dollar_volatility
