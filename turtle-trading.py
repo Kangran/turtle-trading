@@ -30,6 +30,11 @@ def initialize(context):
     context.capital_multiplier = 2
     context.twenty_day_breakout = 20
     context.fifty_five_day_breakout = 55
+    context.limit.single_market = 4
+    context.limit.closely_correlated_markets = 6
+    context.limit.loosely_correlated_markets = 6
+    context.limit.long_direction = 12
+    context.limit.short_direction = 12
     context.is_debug = True
     
     schedule_function(
