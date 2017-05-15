@@ -39,6 +39,9 @@ Modules: https://www.quantopian.com/help#ide-module-import
 # compute-dollar-volatility
 Compute dollar volatility. Multiply contract `tick_size` by `average_true_range`.
 
+# compute-trade-size
+Compute trade size. Multiply capital by capital risk per trade, then divide by dollar volatility.
+
 # what
 - Components of a complete trading system
     - Markets: What to trade
@@ -47,11 +50,6 @@ Compute dollar volatility. Multiply contract `tick_size` by `average_true_range`
     - Position sizing: How much to trade
         - Diversification
         - Money management
-        - Risk limit
-            - Single market: 4 units
-            - Closely correlated markets: 6 units
-            - Loosely correlated markets: 10 units
-            - Single direction: 12 units
     - Entries: When to enter trade
         - Exact price and market conditions to enter
         - Consistent in taking entry signals
