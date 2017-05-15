@@ -206,9 +206,9 @@ def compute_trade_size(context):
             + context.profit\
             * context.capital_multiplier
 
-    context.trade_size = context.capital\
+    context.trade_size = int(context.capital\
         * context.capital_risk_per_trade\
-        / context.dollar_volatility
+        / context.dollar_volatility)
         
     if context.is_debug:
         assert(context.trade_size > 0)
