@@ -25,9 +25,13 @@ def initialize(context):
     context.markets = None
     context.prices = None
     context.contracts = None
+    context.average_true_range = None
+    context.dollar_volatility = None
     context.capital = context.portfolio.starting_cash
+    context.profit = None
     context.capital_risk_per_trade = 0.01
     context.capital_multiplier = 2
+    context.trade_size = None
     context.twenty_day_breakout = 20
     context.fifty_five_day_breakout = 55
     context.single_market_limit = 4
@@ -57,29 +61,15 @@ def handle_data(context, data):
         context.prices = context.prices.reindex()
         
         get_contracts(context, data)
-        
-        average_true_range = compute_average_true_range(
+        compute_average_true_range(
             context,
             context.markets[0]
         )
-        
-        dollar_volatility = compute_dollar_volatility(
+        compute_dollar_volatility(
             context,
-            context.markets[0],
-            average_true_range
+            context.markets[0]
         )
-        
-        profit = context.portfolio.portfolio_value\
-            - context.portfolio.starting_cash
-            
-        if profit < 0:
-            context.capital = context.portfolio.starting_cash\
-                + profit\
-                * context.capital_multiplier
-                
-        trade_size = context.capital\
-            * context.capital_risk_per_trade\
-            / dollar_volatility
+        compute_trade_size(context)
 
 def validate_markets(context, data):
     """
@@ -182,7 +172,7 @@ def compute_average_true_range(context, market):
     rolling_window = 21
     moving_average = 20
     
-    average_true_range = ATR(
+    context.average_true_range = ATR(
         context.prices[market].high[-rolling_window:],
         context.prices[market].low[-rolling_window:],
         context.prices[market].close[-rolling_window:],
@@ -190,19 +180,32 @@ def compute_average_true_range(context, market):
     )[-1]
     
     if context.is_debug:
-        assert(average_true_range > 0)
-        
-    return average_true_range
+        assert(context.average_true_range > 0)
 
-def compute_dollar_volatility(context, market, average_true_range):
+def compute_dollar_volatility(context, market):
     """
     Compute dollar volatility.
     """
     contract = context.contracts[market]
     
-    dollar_volatility = contract.tick_size * average_true_range
+    context.dollar_volatility = contract.tick_size\
+        * context.average_true_range
     
     if context.is_debug:
-        assert(dollar_volatility > 0)
+        assert(context.dollar_volatility > 0)
+
+def compute_trade_size(context):
+    """
+    Compute trade size.
+    """
+    context.profit = context.portfolio.portfolio_value\
+        - context.portfolio.starting_cash
         
-    return dollar_volatility
+    if context.profit < 0:
+        context.capital = context.portfolio.starting_cash\
+            + context.profit\
+            * context.capital_multiplier
+
+    context.trade_size = context.capital\
+        * context.capital_risk_per_trade\
+        / context.dollar_volatility
