@@ -28,6 +28,8 @@ def initialize(context):
     context.capital = context.portfolio.starting_cash
     context.capital_risk_per_trade = 0.01
     context.capital_multiplier = 2
+    context.twenty_day_breakout = 20
+    context.fifty_five_day_breakout = 55
     context.is_debug = True
     
     schedule_function(
