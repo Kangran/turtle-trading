@@ -30,6 +30,12 @@ def initialize(context):
     ]
     context.markets = None
     context.prices = None
+    context.twenty_day_breakout = 20
+    context.fifty_five_day_breakout = 55
+    context.twenty_day_high = {}
+    context.twenty_day_low = {}
+    context.fifty_five_day_high = {}
+    context.fifty_five_day_low = {}
     context.contracts = None
     context.average_true_range = None
     context.dollar_volatility = None
@@ -38,8 +44,6 @@ def initialize(context):
     context.capital_risk_per_trade = 0.01
     context.capital_multiplier = 2
     context.trade_size = None
-    context.twenty_day_breakout = 20
-    context.fifty_five_day_breakout = 55
     context.single_market_limit = 4
     context.closely_correlated_market_limit = 6
     context.loosely_correlated_market_limit = 6
@@ -70,6 +74,8 @@ def handle_data(context, data):
         context.prices = context.prices.transpose(2, 1, 0)
         context.prices = context.prices.reindex()
         
+        compute_high(context)
+        compute_low(context)
         get_contracts(context, data)
         compute_average_true_range(
             context,
@@ -179,6 +185,42 @@ def validate_prices(context):
         assert(context.prices.shape[0] == 3)
         assert(context.prices.shape[1] == 22)
         assert(context.prices.shape[2] > 8)
+
+def compute_high(context):
+    """
+    Compute 20 and 55 day high.
+    """
+    for market in context.prices.items:
+        context.twenty_day_high[market] = context\
+            .prices[market]\
+            .high[-context.twenty_day_breakout-1:-1]\
+            .max()
+        context.fifty_five_day_high[market] = context\
+            .prices[market]\
+            .high[-context.fifty_five_day_breakout-1:-1]\
+            .max()
+        
+    if context.is_debug:
+        assert(len(context.twenty_day_high) > 8)
+        assert(len(context.fifty_five_day_high) > 8)
+
+def compute_low(context):
+    """
+    Compute 20 and 55 day low.
+    """
+    for market in context.prices.items:
+        context.twenty_day_low[market] = context\
+            .prices[market]\
+            .low[-context.twenty_day_breakout-1:-1]\
+            .min()
+        context.fifty_five_day_low[market] = context\
+            .prices[market]\
+            .low[-context.fifty_five_day_breakout-1:-1]\
+            .min()
+        
+    if context.is_debug:
+        assert(len(context.twenty_day_low) > 8)
+        assert(len(context.fifty_five_day_low) > 8)
 
 def get_contracts(context, data):
     """
