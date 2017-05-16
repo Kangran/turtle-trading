@@ -37,10 +37,14 @@ Average true range: https://mrjbq7.github.io/ta-lib/func_groups/volatility_indic
 Modules: https://www.quantopian.com/help#ide-module-import
 
 # compute-dollar-volatility
-Compute dollar volatility. Multiply contract `tick_size` by `average_true_range`.
+Compute dollar volatility.
+
+`context.dollar_volatility` = `tick_size` * `average_true_range`
 
 # compute-trade-size
-Compute trade size. Multiply capital by capital risk per trade, then divide by dollar volatility.
+Compute trade size.
+
+`context.trade_size` = `context.capital` * `context.capital_risk_per_trade` / `context.dollar_volatility`
 
 # what
 - Components of a complete trading system
