@@ -3,7 +3,7 @@ from time import time
 
 def initialize(context):
     """
-    Initialize algorithm.
+    Initialize parameters.
     """
     context.is_debug = True
     
@@ -122,7 +122,7 @@ def validate_markets(context, data):
 
 def get_prices(context, data):
     """
-    Get prices.
+    Get high, low, and close prices.
     """
     if context.is_debug:
         start_time = time()
@@ -224,7 +224,7 @@ def compute_low(context):
 
 def get_contracts(context, data):
     """
-    Get contracts.
+    Get current contracts.
     """
     if context.is_debug:
         start_time = time()
