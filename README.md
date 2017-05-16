@@ -43,7 +43,8 @@ Get current contracts.
 Compute average true range, or N, using ATR in TA-Lib. Use a rolling window that is 1 day larger than the moving average.
 
 Average true range: https://mrjbq7.github.io/ta-lib/func_groups/volatility_indicators.html
-Modules: https://www.quantopian.com/help#ide-module-import
+
+TA-Lib module: https://www.quantopian.com/help#ide-module-import
 
 # compute-dollar-volatility
 Compute dollar volatility.
