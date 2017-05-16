@@ -14,7 +14,7 @@ Parameters
 Suppress null warnings after first log message: https://www.quantopian.com/posts/warn-numpy-slash-lib-slash-nanfunctions-dot-py-319-runtimewarning-all-nan-slice-encountered
 
 # initialize
-Initialize algorithm. Executes at 1970-01-01 7 PM UTC-4. Intersect Quantopian futures universe with Turtle Trading markets. Validate markets on market open.
+Initialize parameters. Executes at 1970-01-01 7 PM UTC-4. Intersect Quantopian futures universe with Turtle Trading markets. Validate markets on market open.
 
 Universe: https://www.quantopian.com/help#available-futures
 
@@ -25,10 +25,19 @@ Process data every minute. Executes from 6:31 AM to 5 PM UTC-4. Get prices. Vali
 Drop markets that stopped trading. Set markets as continuous futures to allow access to a rolling window of futures contracts.
 
 # get-prices
-Get prices. Get high, low, and close. Get 22 daily bars for computing average true range.
+Get high, low, and close prices. Get 22 daily bars for computing average true range.
 
 # validate-prices
 Drop markets with null prices. Set markets as validated markets
+
+# compute-high
+Compute 20 and 55 day high. Get highest high for the past 20 and 55 days.
+
+# compute-low
+Compute 20 and 55 day low. Get lowest low for the past 20 and 55 days.
+
+# get-contracts
+Get current contracts.
 
 # compute-average-true-range
 Compute average true range, or N, using ATR in TA-Lib. Use a rolling window that is 1 day larger than the moving average.
