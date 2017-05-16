@@ -54,7 +54,6 @@ def initialize(context):
     if context.is_debug:
         time_taken = (time() - start_time) * 1000
         log.debug('Executed in %f ms.' % time_taken)
-        
         assert(len(context.symbols) == 16)
 
 def handle_data(context, data):
@@ -113,7 +112,6 @@ def validate_markets(context, data):
     if context.is_debug:
         time_taken = (time() - start_time) * 1000
         log.debug('Executed in %f ms.' % time_taken)
-        
         assert(len(context.markets) == 14)
 
 def get_prices(context, data):
@@ -137,7 +135,6 @@ def get_prices(context, data):
     if context.is_debug:
         time_taken = (time() - start_time) * 1000
         log.debug('Executed in %f ms.' % time_taken)
-        
         assert(context.prices.shape[0] == 3)
         assert(context.prices.shape[1] == 22)
         assert(context.prices.shape[2] > 8)
@@ -179,7 +176,6 @@ def validate_prices(context):
     if context.is_debug:
         time_taken = (time() - start_time) * 1000
         log.debug('Executed in %f ms.' % time_taken)
-        
         assert(context.prices.shape[0] == 3)
         assert(context.prices.shape[1] == 22)
         assert(context.prices.shape[2] > 8)
@@ -201,7 +197,6 @@ def get_contracts(context, data):
     if context.is_debug:
         time_taken = (time() - start_time) * 1000
         log.debug('Executed in %f ms.' % time_taken)
-        
         assert(context.contracts.shape[0] > 8)
 
 def compute_average_true_range(context, market):
@@ -224,7 +219,6 @@ def compute_average_true_range(context, market):
     if context.is_debug:
         time_taken = (time() - start_time) * 1000
         log.debug('Executed in %f ms.' % time_taken)
-        
         assert(context.average_true_range > 0)
 
 def compute_dollar_volatility(context, market):
@@ -242,7 +236,6 @@ def compute_dollar_volatility(context, market):
     if context.is_debug:
         time_taken = (time() - start_time) * 1000
         log.debug('Executed in %f ms.' % time_taken)
-        
         assert(context.dollar_volatility > 0)
 
 def compute_trade_size(context):
@@ -267,5 +260,4 @@ def compute_trade_size(context):
     if context.is_debug:
         time_taken = (time() - start_time) * 1000
         log.debug('Executed in %f ms.' % time_taken)
-        
         assert(context.trade_size > 0)
