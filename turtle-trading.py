@@ -1,9 +1,15 @@
 from talib import ATR
+from time import time
 
 def initialize(context):
     """
     Initialize algorithm.
     """
+    context.is_debug = True
+    
+    if context.is_debug:
+        start_time = time()
+    
     context.symbols = [
         'BP',
         'CD',
@@ -39,7 +45,6 @@ def initialize(context):
     context.loosely_correlated_market_limit = 6
     context.long_limit = 12
     context.short_limit = 12
-    context.is_debug = True
     
     schedule_function(
         func=validate_markets,
@@ -47,12 +52,18 @@ def initialize(context):
     )
     
     if context.is_debug:
+        time_taken = (time() - start_time) * 1000
+        log.info('Executed in %f ms.' % time_taken)
+        
         assert(len(context.symbols) == 16)
 
 def handle_data(context, data):
     """
     Process data every minute.
     """
+    if context.is_debug:
+        start_time = time()
+        
     if context.markets is not None:
         get_prices(context, data)
         validate_prices(context)
@@ -70,11 +81,18 @@ def handle_data(context, data):
             context.markets[0]
         )
         compute_trade_size(context)
+        
+    if context.is_debug:
+        time_taken = (time() - start_time) * 1000
+        log.info('Executed in %f ms.' % time_taken)
 
 def validate_markets(context, data):
     """
     Drop markets that stopped trading.
     """
+    if context.is_debug:
+        start_time = time()
+        
     context.markets = map(
         lambda market: continuous_future(market),
         context.symbols
@@ -93,12 +111,18 @@ def validate_markets(context, data):
                 )
             
     if context.is_debug:
+        time_taken = (time() - start_time) * 1000
+        log.info('Executed in %f ms.' % time_taken)
+        
         assert(len(context.markets) == 14)
 
 def get_prices(context, data):
     """
     Get prices.
     """
+    if context.is_debug:
+        start_time = time()
+        
     fields = ['high', 'low', 'close']
     bars = 22
     frequency = '1d'
@@ -111,6 +135,9 @@ def get_prices(context, data):
     )
     
     if context.is_debug:
+        time_taken = (time() - start_time) * 1000
+        log.info('Executed in %f ms.' % time_taken)
+        
         assert(context.prices.shape[0] == 3)
         assert(context.prices.shape[1] == 22)
         assert(context.prices.shape[2] > 8)
@@ -119,6 +146,9 @@ def validate_prices(context):
     """
     Drop markets with null prices.
     """
+    if context.is_debug:
+        start_time = time()
+        
     context.prices.dropna(axis=2, inplace=True)
     
     validated_markets = map(
@@ -147,6 +177,9 @@ def validate_prices(context):
     )
     
     if context.is_debug:
+        time_taken = (time() - start_time) * 1000
+        log.info('Executed in %f ms.' % time_taken)
+        
         assert(context.prices.shape[0] == 3)
         assert(context.prices.shape[1] == 22)
         assert(context.prices.shape[2] > 8)
@@ -155,6 +188,9 @@ def get_contracts(context, data):
     """
     Get contracts.
     """
+    if context.is_debug:
+        start_time = time()
+        
     fields = 'contract'
     
     context.contracts = data.current(
@@ -163,12 +199,18 @@ def get_contracts(context, data):
     )
     
     if context.is_debug:
+        time_taken = (time() - start_time) * 1000
+        log.info('Executed in %f ms.' % time_taken)
+        
         assert(context.contracts.shape[0] > 8)
 
 def compute_average_true_range(context, market):
     """
     Compute average true range, or N.
     """
+    if context.is_debug:
+        start_time = time()
+        
     rolling_window = 21
     moving_average = 20
     
@@ -180,24 +222,36 @@ def compute_average_true_range(context, market):
     )[-1]
     
     if context.is_debug:
+        time_taken = (time() - start_time) * 1000
+        log.info('Executed in %f ms.' % time_taken)
+        
         assert(context.average_true_range > 0)
 
 def compute_dollar_volatility(context, market):
     """
     Compute dollar volatility.
     """
+    if context.is_debug:
+        start_time = time()
+        
     contract = context.contracts[market]
     
     context.dollar_volatility = contract.tick_size\
         * context.average_true_range
     
     if context.is_debug:
+        time_taken = (time() - start_time) * 1000
+        log.info('Executed in %f ms.' % time_taken)
+        
         assert(context.dollar_volatility > 0)
 
 def compute_trade_size(context):
     """
     Compute trade size.
     """
+    if context.is_debug:
+        start_time = time()
+        
     context.profit = context.portfolio.portfolio_value\
         - context.portfolio.starting_cash
         
@@ -211,4 +265,7 @@ def compute_trade_size(context):
         / context.dollar_volatility)
         
     if context.is_debug:
+        time_taken = (time() - start_time) * 1000
+        log.info('Executed in %f ms.' % time_taken)
+        
         assert(context.trade_size > 0)
