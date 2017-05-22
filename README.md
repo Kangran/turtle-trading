@@ -25,7 +25,7 @@ Initialize parameters. Executes at 1970-01-01 7 PM UTC-4. Intersect Quantopian f
 Universe: https://www.quantopian.com/help#available-futures
 
 # handle-data
-Process data every minute. Executes from 6:31 AM to 5 PM UTC-4. Get prices. Validate prices. Transpose prices. Compute average true range. Compute dollar volatility. Compute profit. Compute trade size.
+Process data every minute. Executes from 6:31 AM to 5 PM UTC-4. Place order on entry signal.
 
 # validate-markets
 Drop markets that stopped trading. Set markets as continuous futures to allow access to a rolling window of futures contracts.
@@ -34,7 +34,7 @@ Drop markets that stopped trading. Set markets as continuous futures to allow ac
 Get high, low, and close prices. Get 22 daily bars for computing average true range.
 
 # validate-prices
-Drop markets with null prices. Set markets as validated markets
+Drop markets with null prices. Set markets as validated markets.
 
 # compute-high
 Compute 20 and 55 day high. Get highest high for the past 20 and 55 days.
@@ -53,13 +53,9 @@ Average true range: https://mrjbq7.github.io/ta-lib/func_groups/volatility_indic
 TA-Lib module: https://www.quantopian.com/help#ide-module-import
 
 # compute-dollar-volatility
-Compute dollar volatility.
-
 `context.dollar_volatility` = `multiplier` * `average_true_range`
 
 # compute-trade-size
-Compute trade size.
-
 `context.trade_size` = `context.capital` * `context.capital_risk_per_trade` / `context.dollar_volatility`
 
 # what
@@ -74,7 +70,6 @@ Compute trade size.
         - Exact price and market conditions to enter
         - Consistent in taking entry signals
     - Stops: When to cut loss
-        - Cut loss
         - Define point to get out before entering
         - Tighten stops based on 2 times volatility from previous fill price, or use 0.5 times volatility for each unit
     - Exits: When to exit trade
