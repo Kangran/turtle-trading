@@ -36,6 +36,7 @@ def initialize(context):
     context.twenty_day_low = {}
     context.fifty_five_day_high = {}
     context.fifty_five_day_low = {}
+    context.contract = None
     context.contracts = None
     context.average_true_range = None
     context.dollar_volatility = None
@@ -281,9 +282,9 @@ def compute_dollar_volatility(context, market):
     if context.is_debug:
         start_time = time()
         
-    contract = context.contracts[market]
+    context.contract = context.contracts[market]
     
-    context.dollar_volatility = contract.multiplier\
+    context.dollar_volatility = context.contract.multiplier\
         * context.average_true_range
     
     if context.is_debug:
