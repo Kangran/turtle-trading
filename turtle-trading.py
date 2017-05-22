@@ -91,8 +91,8 @@ def handle_data(context, data):
                     'Long %s %i @ %.2f'
                     % (market.root_symbol, context.trade_size, price)
                 )
-            if price > context.twenty_day_low[market]\
-                    or price > context.fifty_five_day_low[market]:
+            if price < context.twenty_day_low[market]\
+                    or price < context.fifty_five_day_low[market]:
                 log.info(
                     'Short %s %i @ %.2f'
                     % (market.root_symbol, context.trade_size, price)
