@@ -76,9 +76,14 @@ def handle_data(context, data):
         
         compute_high(context)
         compute_low(context)
+        get_contracts(context, data)
         
         for market in context.prices.items:
             price = context.prices[market].close[-1]
+            
+            compute_average_true_range(context, market)
+            compute_dollar_volatility(context, market)
+            compute_trade_size(context)
             
             if price > context.twenty_day_high[market]:
                 log.info('20 day high. Long %s.' % market.root_symbol)
@@ -88,17 +93,6 @@ def handle_data(context, data):
                 log.info('20 day low. Short %s.' % market.root_symbol)
             if price > context.fifty_five_day_low[market]:
                 log.info('55 day low. Short %s.' % market.root_symbol)
-        
-        get_contracts(context, data)
-        compute_average_true_range(
-            context,
-            context.markets[0]
-        )
-        compute_dollar_volatility(
-            context,
-            context.markets[0]
-        )
-        compute_trade_size(context)
         
     if context.is_debug:
         time_taken = (time() - start_time) * 1000
