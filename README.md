@@ -5,9 +5,15 @@ Profit using trend trading
 See https://github.com/vyq/turtle-trading/raw/master/the-original-turtle-trading-rules.pdf
 
 # backtest
-Parameters
+Iterative
 - Start date: 2017-02-27
 - End date: 2017-03-31
+- Cash: USD 1,000,000
+- Trading calendar: US Futures
+
+Full
+- Start date: 2002-02-01
+- End date: Today
 - Cash: USD 1,000,000
 - Trading calendar: US Futures
 
@@ -49,7 +55,7 @@ TA-Lib module: https://www.quantopian.com/help#ide-module-import
 # compute-dollar-volatility
 Compute dollar volatility.
 
-`context.dollar_volatility` = `tick_size` * `average_true_range`
+`context.dollar_volatility` = `multiplier` * `average_true_range`
 
 # compute-trade-size
 Compute trade size.
@@ -106,4 +112,4 @@ Context has limitations:
 
 `before_trading_start()` should not be used for futures as it executes at 8:45 AM UTC-4.
 
-`tick_size` equates to dollars per point.
+`multiplier` equates to dollars per point.
