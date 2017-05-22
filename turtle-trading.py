@@ -85,14 +85,18 @@ def handle_data(context, data):
             compute_dollar_volatility(context, market)
             compute_trade_size(context)
             
-            if price > context.twenty_day_high[market]:
-                log.info('20 day high. Long %s.' % market.root_symbol)
-            if price > context.fifty_five_day_high[market]:
-                log.info('55 day high. Long %s.' % market.root_symbol)
-            if price > context.twenty_day_low[market]:
-                log.info('20 day low. Short %s.' % market.root_symbol)
-            if price > context.fifty_five_day_low[market]:
-                log.info('55 day low. Short %s.' % market.root_symbol)
+            if price > context.twenty_day_high[market]\
+                    or price > context.fifty_five_day_high[market]:
+                log.info(
+                    'Long %s %i @ %.2f'
+                    % (market.root_symbol, context.trade_size, price)
+                )
+            if price > context.twenty_day_low[market]\
+                    or price > context.fifty_five_day_low[market]:
+                log.info(
+                    'Short %s %i @ %.2f'
+                    % (market.root_symbol, context.trade_size, price)
+                )
         
     if context.is_debug:
         time_taken = (time() - start_time) * 1000
