@@ -88,12 +88,22 @@ def handle_data(context, data):
             
             if price > context.twenty_day_high[market]\
                     or price > context.fifty_five_day_high[market]:
+                order(
+                    context.contract,
+                    context.trade_size,
+                    style=LimitOrder(price)
+                )
                 log.info(
                     'Long %s %i @ %.2f'
                     % (market.root_symbol, context.trade_size, price)
                 )
             if price < context.twenty_day_low[market]\
                     or price < context.fifty_five_day_low[market]:
+                order(
+                    context.contract,
+                    -context.trade_size,
+                    style=LimitOrder(price)
+                )
                 log.info(
                     'Short %s %i @ %.2f'
                     % (market.root_symbol, context.trade_size, price)
