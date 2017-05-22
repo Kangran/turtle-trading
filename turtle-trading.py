@@ -283,7 +283,7 @@ def compute_dollar_volatility(context, market):
         
     contract = context.contracts[market]
     
-    context.dollar_volatility = contract.tick_size\
+    context.dollar_volatility = contract.multiplier\
         * context.average_true_range
     
     if context.is_debug:
