@@ -5,7 +5,7 @@ def initialize(context):
     """
     Initialize parameters.
     """
-    context.is_debug = True
+    context.is_debug = False
     
     if context.is_debug:
         start_time = time()
@@ -80,12 +80,14 @@ def handle_data(context, data):
         for market in context.prices.items:
             price = context.prices[market].close[-1]
             
-            if price > context.twenty_day_high or\
-                    price > context.fifty_five_day_high:
-                print('Long %s.' % market.root_symbol)
-            if price < context.twenty_day_low or\
-                    price < context.fifty_five_day_low:
-                print('Short %s.' % market.root_symbol)
+            if price > context.twenty_day_high[market]:
+                log.info('20 day high. Long %s.' % market.root_symbol)
+            if price > context.fifty_five_day_high[market]:
+                log.info('55 day high. Long %s.' % market.root_symbol)
+            if price > context.twenty_day_low[market]:
+                log.info('20 day low. Short %s.' % market.root_symbol)
+            if price > context.fifty_five_day_low[market]:
+                log.info('55 day low. Short %s.' % market.root_symbol)
         
         get_contracts(context, data)
         compute_average_true_range(
