@@ -66,7 +66,8 @@ def initialize(context):
     
     if context.is_debug:
         time_taken = (time() - start_time) * 1000
-        log.debug('Executed in %f ms.' % time_taken)
+        # log.debug('Executed in %f ms.' % time_taken)
+        assert(time_taken < 1)
         assert(len(context.symbols) == 16)
 
 def handle_data(context, data):
@@ -126,7 +127,8 @@ def handle_data(context, data):
                         
     if context.is_debug:
         time_taken = (time() - start_time) * 1000
-        log.debug('Executed in %f ms.' % time_taken)
+        # log.debug('Executed in %f ms.' % time_taken)
+        assert(time_taken < 8192)
 
 def validate_markets(context, data):
     """
@@ -154,7 +156,8 @@ def validate_markets(context, data):
             
     if context.is_debug:
         time_taken = (time() - start_time) * 1000
-        log.debug('Executed in %f ms.' % time_taken)
+        # log.debug('Executed in %f ms.' % time_taken)
+        assert(time_taken < 512)
         assert(len(context.markets) == 14)
 
 def get_prices(context, data):
@@ -177,7 +180,8 @@ def get_prices(context, data):
     
     if context.is_debug:
         time_taken = (time() - start_time) * 1000
-        log.debug('Executed in %f ms.' % time_taken)
+        # log.debug('Executed in %f ms.' % time_taken)
+        assert(time_taken < 8192)
         assert(context.prices.shape[0] == 3)
         assert(context.prices.shape[1] == 22)
         assert(context.prices.shape[2] > 8)
@@ -218,7 +222,8 @@ def validate_prices(context):
     
     if context.is_debug:
         time_taken = (time() - start_time) * 1000
-        log.debug('Executed in %f ms.' % time_taken)
+        # log.debug('Executed in %f ms.' % time_taken)
+        assert(time_taken < 16)
         assert(context.prices.shape[0] == 3)
         assert(context.prices.shape[1] == 22)
         assert(context.prices.shape[2] > 8)
@@ -227,6 +232,9 @@ def compute_high(context):
     """
     Compute 20 and 55 day high.
     """
+    if context.is_debug:
+        start_time = time()
+        
     for market in context.prices.items:
         context.twenty_day_high[market] = context\
             .prices[market]\
@@ -238,6 +246,9 @@ def compute_high(context):
             .max()
         
     if context.is_debug:
+        time_taken = (time() - start_time) * 1000
+        # log.debug('Executed in %f ms.' % time_taken)
+        assert(time_taken < 32)
         assert(len(context.twenty_day_high) > 8)
         assert(len(context.fifty_five_day_high) > 8)
 
@@ -245,6 +256,9 @@ def compute_low(context):
     """
     Compute 20 and 55 day low.
     """
+    if context.is_debug:
+        start_time = time()
+        
     for market in context.prices.items:
         context.twenty_day_low[market] = context\
             .prices[market]\
@@ -256,6 +270,9 @@ def compute_low(context):
             .min()
         
     if context.is_debug:
+        time_taken = (time() - start_time) * 1000
+        # log.debug('Executed in %f ms.' % time_taken)
+        assert(time_taken < 16)
         assert(len(context.twenty_day_low) > 8)
         assert(len(context.fifty_five_day_low) > 8)
 
@@ -275,7 +292,8 @@ def get_contracts(context, data):
     
     if context.is_debug:
         time_taken = (time() - start_time) * 1000
-        log.debug('Executed in %f ms.' % time_taken)
+        # log.debug('Executed in %f ms.' % time_taken)
+        assert(time_taken < 32)
         assert(context.contracts.shape[0] > 8)
 
 def compute_average_true_range(context, market):
@@ -297,7 +315,8 @@ def compute_average_true_range(context, market):
     
     if context.is_debug:
         time_taken = (time() - start_time) * 1000
-        log.debug('Executed in %f ms.' % time_taken)
+        # log.debug('Executed in %f ms.' % time_taken)
+        assert(time_taken < 256)
         assert(context.average_true_range > 0)
 
 def compute_dollar_volatility(context, market):
@@ -314,7 +333,8 @@ def compute_dollar_volatility(context, market):
     
     if context.is_debug:
         time_taken = (time() - start_time) * 1000
-        log.debug('Executed in %f ms.' % time_taken)
+        # log.debug('Executed in %f ms.' % time_taken)
+        assert(time_taken < 1)
         assert(context.dollar_volatility > 0)
 
 def compute_trade_size(context):
@@ -338,5 +358,6 @@ def compute_trade_size(context):
         
     if context.is_debug:
         time_taken = (time() - start_time) * 1000
-        log.debug('Executed in %f ms.' % time_taken)
+        # log.debug('Executed in %f ms.' % time_taken)
+        assert(time_taken < 1)
         assert(context.trade_size >= 0)
