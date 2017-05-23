@@ -93,10 +93,12 @@ def handle_data(context, data):
                     context.trade_size,
                     style=LimitOrder(price)
                 )
-                log.info(
-                    'Long %s %i @ %.2f'
-                    % (market.root_symbol, context.trade_size, price)
-                )
+                
+                if context.is_debug:
+                    log.info(
+                        'Long %s %i@%.2f'
+                        % (market.root_symbol, context.trade_size, price)
+                    )
             if price < context.twenty_day_low[market]\
                     or price < context.fifty_five_day_low[market]:
                 order(
@@ -104,10 +106,12 @@ def handle_data(context, data):
                     -context.trade_size,
                     style=LimitOrder(price)
                 )
-                log.info(
-                    'Short %s %i @ %.2f'
-                    % (market.root_symbol, context.trade_size, price)
-                )
+                
+                if context.is_debug:
+                    log.info(
+                        'Short %s %i@%.2f'
+                        % (market.root_symbol, context.trade_size, price)
+                    )
         
     if context.is_debug:
         time_taken = (time() - start_time) * 1000
