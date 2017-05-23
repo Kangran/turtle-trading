@@ -5,9 +5,9 @@ Profit using trend trading
 See https://github.com/vyq/turtle-trading/raw/master/the-original-turtle-trading-rules.pdf
 
 # backtest
-Build
+Week
 - Start date: 2016-01-01
-- End date: 2016-02-01
+- End date: 2016-01-08
 - Cash: USD 1,000,000
 - Trading calendar: US Futures
 
@@ -107,4 +107,6 @@ Context has limitations:
 
 `before_trading_start()` should not be used for futures as it executes at 8:45 AM UTC-4.
 
-`multiplier` equates to dollars per point.
+`context.contract.multiplier` equates to dollars per point.
+
+`context.trade_size` will be 0 if `context.dollar_volatility` is larger than `context.capital * context.capital_risk_per_trade`.
