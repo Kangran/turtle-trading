@@ -90,9 +90,9 @@ def handle_data(context, data):
         for market in context.prices.items:
             price = context.prices[market].close[-1]
             
-            if price >= context.price_threshold:
-                if price > context.twenty_day_high[market]\
-                        or price > context.fifty_five_day_high[market]:
+            if price > context.twenty_day_high[market]\
+                    or price > context.fifty_five_day_high[market]:
+                if can_trade(context, price):
                     compute_average_true_range(context, market)
                     compute_dollar_volatility(context, market)
                     compute_trade_size(context)
@@ -114,8 +114,9 @@ def handle_data(context, data):
                                 price
                             )
                         )
-                if price < context.twenty_day_low[market]\
-                        or price < context.fifty_five_day_low[market]:
+            if price < context.twenty_day_low[market]\
+                    or price < context.fifty_five_day_low[market]:
+                if can_trade(context, price):
                     compute_average_true_range(context, market)
                     compute_dollar_volatility(context, market)
                     compute_trade_size(context)
@@ -308,6 +309,15 @@ def get_contracts(context, data):
         # log.debug('Executed in %f ms.' % time_taken)
         assert(time_taken < 1024)
         assert(context.contracts.shape[0] > 8)
+
+def can_trade(context, price):
+    """
+    Check if can trade.
+    """
+    if price >= context.price_threshold:
+        return True
+    else:
+        return False
 
 def compute_average_true_range(context, market):
     """
