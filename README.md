@@ -6,8 +6,8 @@ See https://github.com/vyq/turtle-trading/raw/master/the-original-turtle-trading
 
 # backtest
 Build
-- Start date: 2017-02-27
-- End date: 2017-03-31
+- Start date: 2016-01-01
+- End date: 2016-02-01
 - Cash: USD 1,000,000
 - Trading calendar: US Futures
 
@@ -25,7 +25,7 @@ Initialize parameters. Executes at 1970-01-01 7 PM UTC-4. Intersect Quantopian f
 Universe: https://www.quantopian.com/help#available-futures
 
 # handle-data
-Process data every minute. Executes from 6:31 AM to 5 PM UTC-4. Place order on entry signal.
+Process data every minute. Executes from 6:31 AM to 5 PM UTC-4. Place order on entry signal. Compute stop.
 
 # validate-markets
 Drop markets that stopped trading. Set markets as continuous futures to allow access to a rolling window of futures contracts.
