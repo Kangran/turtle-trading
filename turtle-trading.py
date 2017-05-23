@@ -5,7 +5,7 @@ def initialize(context):
     """
     Initialize parameters.
     """
-    context.is_debug = False
+    context.is_debug = True
     
     if context.is_debug:
         start_time = time()
@@ -337,4 +337,4 @@ def compute_trade_size(context):
     if context.is_debug:
         time_taken = (time() - start_time) * 1000
         log.debug('Executed in %f ms.' % time_taken)
-        assert(context.trade_size > 0)
+        assert(context.trade_size >= 0)
