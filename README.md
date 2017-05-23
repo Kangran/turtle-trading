@@ -4,6 +4,8 @@ Profit using trend trading
 # strategy
 See https://github.com/vyq/turtle-trading/raw/master/the-original-turtle-trading-rules.pdf
 
+Do not trade markets with prices less than 1.
+
 # backtest
 Week
 - Start date: 2016-01-01
