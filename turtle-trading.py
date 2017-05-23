@@ -86,7 +86,6 @@ def handle_data(context, data):
         compute_low(context)
         get_contracts(context, data)
         open_orders = get_open_orders()
-        print(open_orders)
         
         for market in context.prices.items:
             price = context.prices[market].close[-1]
