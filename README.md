@@ -46,7 +46,11 @@ Compute 20 and 55 day low. Get lowest low for the past 20 and 55 days.
 Get current contracts.
 
 # can-trade
-Check if can trade. Do not trade markets with prices less than 1.
+Check if can trade.
+
+Do not place order if:
+- Price is less than 1
+- Open order exists
 
 # compute-average-true-range
 Compute average true range, or N, using ATR in TA-Lib. Use a rolling window that is 1 day larger than the moving average.
