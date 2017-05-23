@@ -102,12 +102,18 @@ def handle_data(context, data):
                         context.trade_size,
                         style=LimitOrder(price)
                     )
-                    context.stop[market] = price - context.average_true_range * context.stop_multiplier
+                    context.stop[market] = price\
+                        - context.average_true_range\
+                        * context.stop_multiplier
 
                     if context.is_debug:
                         log.debug(
                             'Long %s %i@%.2f'
-                            % (market.root_symbol, context.trade_size, price)
+                            % (
+                                market.root_symbol,
+                                context.trade_size,
+                                price
+                            )
                         )
                 if price < context.twenty_day_low[market]\
                         or price < context.fifty_five_day_low[market]:
@@ -119,12 +125,18 @@ def handle_data(context, data):
                         -context.trade_size,
                         style=LimitOrder(price)
                     )
-                    context.stop[market] = price + context.average_true_range * context.stop_multiplier
+                    context.stop[market] = price\
+                        + context.average_true_range\
+                        * context.stop_multiplier
 
                     if context.is_debug:
                         log.debug(
                             'Short %s %i@%.2f'
-                            % (market.root_symbol, context.trade_size, price)
+                            % (
+                                market.root_symbol,
+                                context.trade_size,
+                                price
+                            )
                         )
                         
     if context.is_debug:
