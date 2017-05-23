@@ -33,6 +33,7 @@ def initialize(context):
     context.prices = None
     context.contract = None
     context.contracts = None
+    context.open_orders = None
     
     # Signal
     context.twenty_day_breakout = 20
@@ -85,14 +86,14 @@ def handle_data(context, data):
         compute_high(context)
         compute_low(context)
         get_contracts(context, data)
-        open_orders = get_open_orders()
+        context.open_orders = get_open_orders()
         
         for market in context.prices.items:
             price = context.prices[market].close[-1]
             
             if price > context.twenty_day_high[market]\
                     or price > context.fifty_five_day_high[market]:
-                if can_trade(context, price):
+                if can_trade(context, market, price):
                     compute_average_true_range(context, market)
                     compute_dollar_volatility(context, market)
                     compute_trade_size(context)
@@ -116,7 +117,7 @@ def handle_data(context, data):
                         )
             if price < context.twenty_day_low[market]\
                     or price < context.fifty_five_day_low[market]:
-                if can_trade(context, price):
+                if can_trade(context, market, price):
                     compute_average_true_range(context, market)
                     compute_dollar_volatility(context, market)
                     compute_trade_size(context)
@@ -310,14 +311,22 @@ def get_contracts(context, data):
         assert(time_taken < 1024)
         assert(context.contracts.shape[0] > 8)
 
-def can_trade(context, price):
+def can_trade(context, market, price):
     """
     Check if can trade.
     """
-    if price >= context.price_threshold:
-        return True
-    else:
-        return False
+    can_trade = True
+    
+    if price < context.price_threshold:
+        can_trade = False
+        
+    if context.open_orders:
+        context.contract = context.contracts[market]
+        
+        if context.contract in context.open_orders:
+            can_trade = False
+    
+    return can_trade
 
 def compute_average_true_range(context, market):
     """
