@@ -45,6 +45,8 @@ def initialize(context):
     context.capital_risk_per_trade = 0.01
     context.capital_multiplier = 2
     context.trade_size = None
+    context.stop = {}
+    context.stop_multiplier = 2
     context.single_market_limit = 4
     context.closely_correlated_market_limit = 6
     context.loosely_correlated_market_limit = 6
@@ -93,6 +95,7 @@ def handle_data(context, data):
                     context.trade_size,
                     style=LimitOrder(price)
                 )
+                context.stop[market] = price - context.average_true_range * context.stop_multiplier
                 
                 if context.is_debug:
                     log.info(
@@ -106,6 +109,7 @@ def handle_data(context, data):
                     -context.trade_size,
                     style=LimitOrder(price)
                 )
+                context.stop[market] = price + context.average_true_range * context.stop_multiplier
                 
                 if context.is_debug:
                     log.info(
