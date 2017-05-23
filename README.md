@@ -5,15 +5,15 @@ Profit using trend trading
 See https://github.com/vyq/turtle-trading/raw/master/the-original-turtle-trading-rules.pdf
 
 # backtest
-Iterative
+Build
 - Start date: 2017-02-27
 - End date: 2017-03-31
 - Cash: USD 1,000,000
 - Trading calendar: US Futures
 
-Full
-- Start date: 2002-02-01
-- End date: Today
+Year
+- Start date: 2016-01-01
+- End date: 2017-01-01
 - Cash: USD 1,000,000
 - Trading calendar: US Futures
 
