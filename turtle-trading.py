@@ -10,6 +10,7 @@ def initialize(context):
     if context.is_debug:
         start_time = time()
     
+    # Data
     context.symbols = [
         'BP',
         'CD',
@@ -30,21 +31,25 @@ def initialize(context):
     ]
     context.markets = None
     context.prices = None
+    context.contract = None
+    context.contracts = None
+    
+    # Signal
     context.twenty_day_breakout = 20
     context.fifty_five_day_breakout = 55
     context.twenty_day_high = {}
     context.twenty_day_low = {}
     context.fifty_five_day_high = {}
     context.fifty_five_day_low = {}
-    context.contract = None
-    context.contracts = None
+    
+    # Risk
     context.average_true_range = None
     context.dollar_volatility = None
     context.capital = context.portfolio.starting_cash
     context.profit = None
+    context.trade_size = None
     context.capital_risk_per_trade = 0.01
     context.capital_multiplier = 2
-    context.trade_size = None
     context.stop = {}
     context.stop_multiplier = 2
     context.single_market_limit = 4
