@@ -118,4 +118,4 @@ Context has limitations:
 
 `context.contract.multiplier` equates to dollars per point.
 
-`context.trade_size` will be 0 if `context.dollar_volatility` is larger than `context.capital * context.capital_risk_per_trade`.
+`context.trade_size` will be less than or equal to 0 if `context.dollar_volatility` is larger than `context.capital * context.capital_risk_per_trade`.
