@@ -29,7 +29,10 @@ def initialize(context):
         'TY',
         'US'
     ]
-    context.markets = None
+    context.markets = map(
+        lambda market: continuous_future(market),
+        context.symbols
+    )
     context.prices = None
     context.contract = None
     context.contracts = None
@@ -60,11 +63,6 @@ def initialize(context):
     context.loosely_correlated_market_limit = 6
     context.long_limit = 12
     context.short_limit = 12
-    
-    schedule_function(
-        func=validate_markets,
-        time_rule=time_rules.market_open(minutes=1)
-    )
     
     schedule_function(
         func=clear_stops,
@@ -167,37 +165,7 @@ def handle_data(context, data):
         time_taken = (time() - start_time) * 1000
         # log.debug('Executed in %f ms.' % time_taken)
         assert(time_taken < 8192)
-
-def validate_markets(context, data):
-    """
-    Drop markets that stopped trading.
-    """
-    if context.is_debug:
-        start_time = time()
         
-    context.markets = map(
-        lambda market: continuous_future(market),
-        context.symbols
-    )
-    
-    markets = context.markets[:]
-    
-    for market in markets:
-        if market.end_date < get_datetime():
-            context.markets.remove(market)
-            
-            if context.is_debug:
-                log.debug(
-                    '%s stopped trading. Dropped.'
-                    % market.root_symbol
-                )
-            
-    if context.is_debug:
-        time_taken = (time() - start_time) * 1000
-        # log.debug('Executed in %f ms.' % time_taken)
-        assert(time_taken < 1024)
-        assert(len(context.markets) == 14)
-
 def clear_stops(context, data):
     """
     Clear stop flags.
