@@ -116,7 +116,7 @@ def handle_data(context, data):
             
             if price > context.twenty_day_high[market]\
                     or price > context.fifty_five_day_high[market]:
-                if can_trade(context, market, price):
+                if is_trade_allowed(context, market, price):
                     order(
                         context.contract,
                         context.trade_size,
@@ -137,7 +137,7 @@ def handle_data(context, data):
                         )
             if price < context.twenty_day_low[market]\
                     or price < context.fifty_five_day_low[market]:
-                if can_trade(context, market, price):
+                if is_trade_allowed(context, market, price):
                     order(
                         context.contract,
                         -context.trade_size,
@@ -328,28 +328,28 @@ def get_contracts(context, data):
         assert(time_taken < 1024)
         assert(context.contracts.shape[0] > 8)
 
-def can_trade(context, market, price):
+def is_trade_allowed(context, market, price):
     """
     Check if can trade.
     """
-    can_trade = True
+    is_trade_allowed = True
     
     if context.portfolio.cash <= 0:
-        can_trade = False
+        is_trade_allowed = False
         
     if context.capital <= 0:
-        can_trade = False
+        is_trade_allowed = False
         
     if price < context.price_threshold:
-        can_trade = False
+        is_trade_allowed = False
         
     if context.open_orders:
         context.contract = context.contracts[market]
         
         if context.contract in context.open_orders:
-            can_trade = False
+            is_trade_allowed = False
     
-    return can_trade
+    return is_trade_allowed
 
 def compute_average_true_range(context, market):
     """
