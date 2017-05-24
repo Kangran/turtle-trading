@@ -88,9 +88,24 @@ def handle_data(context, data):
         get_contracts(context, data)
         context.open_orders = get_open_orders()
         
-        # for position in context.portfolio.positions:
-        #     print(position)
-            # differentiate between stop order and limit order
+        for position in context.portfolio.positions:
+            if position not in context.open_orders:
+                market = continuous_future(position.root_symbol)
+                
+                order_target(
+                    position,
+                    0,
+                    style=StopOrder(context.stop[market])
+                )
+                
+                if context.is_debug:
+                    log.debug(
+                        'Stop %s %.2f'
+                        % (
+                            market.root_symbol,
+                            context.stop[market]
+                        )
+                    )
         
         for market in context.prices.items:
             price = context.prices[market].close[-1]
