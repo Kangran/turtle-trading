@@ -35,6 +35,7 @@ def initialize(context):
     context.contracts = None
     context.open_orders = None
     context.average_true_range = {}
+    context.dollar_volatility = {}
     
     # Signal
     context.twenty_day_breakout = 20
@@ -46,7 +47,6 @@ def initialize(context):
     
     # Risk
     context.price_threshold = 1
-    context.dollar_volatility = None
     context.capital = context.portfolio.starting_cash
     context.profit = None
     context.trade_size = None
@@ -93,6 +93,8 @@ def handle_data(context, data):
         compute_low(context)
         get_contracts(context, data)
         context.open_orders = get_open_orders()
+        compute_average_true_range(context)
+        compute_dollar_volatility(context)
         
         for position in context.portfolio.positions:
             market = continuous_future(position.root_symbol)
@@ -117,8 +119,6 @@ def handle_data(context, data):
         for market in context.prices.items:
             price = context.prices[market].close[-1]
             
-            compute_average_true_range(context)
-            # compute_dollar_volatility(context, market)
             # compute_trade_size(context)
             
             # if price > context.twenty_day_high[market]\
@@ -387,26 +387,27 @@ def compute_average_true_range(context):
         time_taken = (time() - start_time) * 1000
         # log.debug('Executed in %f ms.' % time_taken)
         assert(time_taken < 1024)
-        print(context.average_true_range)
-        # assert(context.average_true_range > 0)
+        assert(len(context.average_true_range) > 8)
 
-def compute_dollar_volatility(context, market):
+def compute_dollar_volatility(context):
     """
     Compute dollar volatility.
     """
     if context.is_debug:
         start_time = time()
         
-    context.contract = context.contracts[market]
-    
-    context.dollar_volatility = context.contract.multiplier\
-        * context.average_true_range
+    for market in context.markets:
+        context.contract = context.contracts[market]
+        
+        context.dollar_volatility[market] = context.contract.multiplier\
+            * context.average_true_range[market]
     
     if context.is_debug:
         time_taken = (time() - start_time) * 1000
         # log.debug('Executed in %f ms.' % time_taken)
         assert(time_taken < 1024)
-        assert(context.dollar_volatility > 0)
+        print(context.dollar_volatility)
+        assert(len(context.dollar_volatility) > 8)
 
 def compute_trade_size(context):
     """
