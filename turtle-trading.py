@@ -98,25 +98,25 @@ def handle_data(context, data):
     compute_dollar_volatility(context)
     compute_trade_size(context)
 
-    # for position in context.portfolio.positions:
-    #     market = continuous_future(position.root_symbol)
+    for position in context.portfolio.positions:
+        market = continuous_future(position.root_symbol)
         
-    #     if not context.has_stop[market]:
-    #         order_target(
-    #             position,
-    #             0,
-    #             style=StopOrder(context.stop[market])
-    #         )
-    #         context.has_stop[market] = True
+        if not context.has_stop[market]:
+            order_target(
+                position,
+                0,
+                style=StopOrder(context.stop[market])
+            )
+            context.has_stop[market] = True
 
-    #         if context.is_debug:
-    #             log.debug(
-    #                 'Stop %s %.2f'
-    #                 % (
-    #                     market.root_symbol,
-    #                     context.stop[market]
-    #                 )
-    #             )
+            if context.is_debug:
+                log.debug(
+                    'Stop %s %.2f'
+                    % (
+                        market.root_symbol,
+                        context.stop[market]
+                    )
+                )
 
     for market in context.prices.items:
         price = context.prices[market].close[-1]
