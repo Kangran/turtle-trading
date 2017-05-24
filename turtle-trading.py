@@ -53,6 +53,7 @@ def initialize(context):
     context.capital_risk_per_trade = 0.01
     context.capital_multiplier = 2
     context.stop = {}
+    context.has_stop = {}
     context.stop_multiplier = 2
     context.single_market_limit = 4
     context.closely_correlated_market_limit = 6
@@ -62,6 +63,11 @@ def initialize(context):
     
     schedule_function(
         func=validate_markets,
+        time_rule=time_rules.market_open(minutes=1)
+    )
+    
+    schedule_function(
+        func=clear_stops,
         time_rule=time_rules.market_open(minutes=1)
     )
     
@@ -191,6 +197,13 @@ def validate_markets(context, data):
         # log.debug('Executed in %f ms.' % time_taken)
         assert(time_taken < 1024)
         assert(len(context.markets) == 14)
+
+def clear_stops(context, data):
+    """
+    Clear stops.
+    """
+    for market in context.markets:
+        context.has_stop[market] = False
 
 def get_prices(context, data):
     """
