@@ -48,7 +48,9 @@ Get current contracts.
 # can-trade
 Check if can trade.
 
-Do not place order if:
+Do not trade if:
+- Cash is less than or equal to 0
+- Capital is less than or equal to 0
 - Price is less than 1
 - Open order exists
 
