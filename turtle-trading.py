@@ -36,6 +36,7 @@ def initialize(context):
     context.open_orders = None
     context.average_true_range = {}
     context.dollar_volatility = {}
+    context.trade_size = {}
     
     # Signal
     context.twenty_day_breakout = 20
@@ -49,7 +50,6 @@ def initialize(context):
     context.price_threshold = 1
     context.capital = context.portfolio.starting_cash
     context.profit = None
-    context.trade_size = None
     context.capital_risk_per_trade = 0.01
     context.capital_multiplier = 2
     context.stop = {}
@@ -95,6 +95,7 @@ def handle_data(context, data):
         context.open_orders = get_open_orders()
         compute_average_true_range(context)
         compute_dollar_volatility(context)
+        compute_trade_size(context)
         
         for position in context.portfolio.positions:
             market = continuous_future(position.root_symbol)
@@ -118,8 +119,6 @@ def handle_data(context, data):
         
         for market in context.prices.items:
             price = context.prices[market].close[-1]
-            
-            # compute_trade_size(context)
             
             # if price > context.twenty_day_high[market]\
             #         or price > context.fifty_five_day_high[market]:
@@ -425,14 +424,16 @@ def compute_trade_size(context):
             * context.capital_multiplier
 
     if context.capital <= 0:
-        context.trade_size = 0
+        for market in context.markets:
+            context.trade_size[market] = 0
     else:
-        context.trade_size = int(context.capital\
-            * context.capital_risk_per_trade\
-            / context.dollar_volatility)
+        for market in context.markets:
+            context.trade_size[market] = int(context.capital\
+                * context.capital_risk_per_trade\
+                / context.dollar_volatility[market])
         
     if context.is_debug:
         time_taken = (time() - start_time) * 1000
         # log.debug('Executed in %f ms.' % time_taken)
         assert(time_taken < 1024)
-        assert(context.trade_size >= 0)
+        assert(len(context.trade_size) >= 8)
