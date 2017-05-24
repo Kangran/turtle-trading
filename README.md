@@ -122,3 +122,5 @@ Context has limitations:
 `context.contract.multiplier` equates to dollars per point.
 
 `context.trade_size` will be less than or equal to 0 if `context.dollar_volatility` is larger than `context.capital * context.capital_risk_per_trade`.
+
+Orders placed at end of day may fail to fill because of insufficient liquidity.
