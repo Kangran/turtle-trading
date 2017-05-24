@@ -30,6 +30,9 @@ Process data every minute. Executes from 6:31 AM to 5 PM UTC-4. Place order on e
 # validate-markets
 Drop markets that stopped trading. Set markets as continuous futures to allow access to a rolling window of futures contracts.
 
+# clear-stops
+Clear stop flags.
+
 # get-prices
 Get high, low, and close prices. Get 22 daily bars for computing average true range.
 
