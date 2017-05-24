@@ -120,48 +120,48 @@ def handle_data(context, data):
         for market in context.prices.items:
             price = context.prices[market].close[-1]
             
-            # if price > context.twenty_day_high[market]\
-            #         or price > context.fifty_five_day_high[market]:
-            #     if is_trade_allowed(context, market, price):
-            #         order(
-            #             context.contract,
-            #             context.trade_size,
-            #             style=LimitOrder(price)
-            #         )
-            #         context.stop[market] = price\
-            #             - context.average_true_range\
-            #             * context.stop_multiplier
+            if price > context.twenty_day_high[market]\
+                    or price > context.fifty_five_day_high[market]:
+                if is_trade_allowed(context, market, price):
+                    order(
+                        context.contract,
+                        context.trade_size[market],
+                        style=LimitOrder(price)
+                    )
+                    context.stop[market] = price\
+                        - context.average_true_range[market]\
+                        * context.stop_multiplier
 
-            #         if context.is_debug:
-            #             log.debug(
-            #                 'Long %s %i@%.2f'
-            #                 % (
-            #                     market.root_symbol,
-            #                     context.trade_size,
-            #                     price
-            #                 )
-            #             )
-            # if price < context.twenty_day_low[market]\
-            #         or price < context.fifty_five_day_low[market]:
-            #     if is_trade_allowed(context, market, price):
-            #         order(
-            #             context.contract,
-            #             -context.trade_size,
-            #             style=LimitOrder(price)
-            #         )
-            #         context.stop[market] = price\
-            #             + context.average_true_range\
-            #             * context.stop_multiplier
+                    if context.is_debug:
+                        log.debug(
+                            'Long %s %i@%.2f'
+                            % (
+                                market.root_symbol,
+                                context.trade_size[market],
+                                price
+                            )
+                        )
+            if price < context.twenty_day_low[market]\
+                    or price < context.fifty_five_day_low[market]:
+                if is_trade_allowed(context, market, price):
+                    order(
+                        context.contract,
+                        -context.trade_size[market],
+                        style=LimitOrder(price)
+                    )
+                    context.stop[market] = price\
+                        + context.average_true_range[market]\
+                        * context.stop_multiplier
 
-            #         if context.is_debug:
-            #             log.debug(
-            #                 'Short %s %i@%.2f'
-            #                 % (
-            #                     market.root_symbol,
-            #                     context.trade_size,
-            #                     price
-            #                 )
-            #             )
+                    if context.is_debug:
+                        log.debug(
+                            'Short %s %i@%.2f'
+                            % (
+                                market.root_symbol,
+                                context.trade_size[market],
+                                price
+                            )
+                        )
                         
     if context.is_debug:
         time_taken = (time() - start_time) * 1000
