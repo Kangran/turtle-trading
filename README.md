@@ -20,12 +20,12 @@ Year
 Suppress null warnings after first log message: https://www.quantopian.com/posts/warn-numpy-slash-lib-slash-nanfunctions-dot-py-319-runtimewarning-all-nan-slice-encountered
 
 # initialize
-Initialize parameters. Executes at 1970-01-01 7 PM UTC-4. Intersect Quantopian futures universe with Turtle Trading markets. Define data, signal, and risk parameters. Clear stops.
+Initialize parameters. Executes at 1970-01-01 7 PM UTC-4. Intersect Quantopian futures universe with Turtle Trading markets.
 
 Universe: https://www.quantopian.com/help#available-futures
 
 # handle-data
-Process data every minute. Executes from 6:31 AM to 5 PM UTC-4. Place order on entry signal. Compute stop.
+Process data every minute. Executes from 6:31 AM to 5 PM UTC-4. Long or short markets based on entry signals. Close positions based on stops or exit signals.
 
 # clear-stops
 Clear stop flags.
@@ -45,8 +45,8 @@ Compute 20 and 55 day low. Get lowest low for the past 20 and 55 days.
 # get-contracts
 Get current contracts.
 
-# can-trade
-Check if can trade.
+# is-trade-allowed
+Check if allowed to trade.
 
 Do not trade if:
 - Cash is less than or equal to 0
@@ -73,21 +73,16 @@ TA-Lib module: https://www.quantopian.com/help#ide-module-import
         - High trading volume
         - Trend well
     - Position sizing: How much to trade
-        - Diversification
         - Money management
     - Entries: When to enter trade
         - Exact price and market conditions to enter
-        - Consistent in taking entry signals
     - Stops: When to cut loss
-        - Define point to get out before entering
         - Tighten stops based on 2 times volatility from previous fill price, or use 0.5 times volatility for each unit
     - Exits: When to exit trade
         - Maintain discipline to exit
-        - Do not exit early
     - Tactics: How to trade
         - Do not place stop orders
         - Use limit orders
-        - Wait for temporary price reversal before placing orders
         - If multiple signals
             - Rank markets that moved the most in terms of volatility
             - Long strongest market
@@ -95,7 +90,6 @@ TA-Lib module: https://www.quantopian.com/help#ide-module-import
         - Do not roll over expiring contract unless breakout
         - Roll over into new contract month a few weeks before expiration, unless current position performs better
             - Review volume and open interest
-        - Have discipline to follow the rules
 - Further study
     - Trading psychology
     - Money management
