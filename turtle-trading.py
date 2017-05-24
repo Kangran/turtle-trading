@@ -34,6 +34,7 @@ def initialize(context):
     context.contract = None
     context.contracts = None
     context.open_orders = None
+    context.average_true_range = {}
     
     # Signal
     context.twenty_day_breakout = 20
@@ -45,7 +46,6 @@ def initialize(context):
     
     # Risk
     context.price_threshold = 1
-    context.average_true_range = None
     context.dollar_volatility = None
     context.capital = context.portfolio.starting_cash
     context.profit = None
@@ -95,14 +95,15 @@ def handle_data(context, data):
         context.open_orders = get_open_orders()
         
         for position in context.portfolio.positions:
-            if position not in context.open_orders:
-                market = continuous_future(position.root_symbol)
-                
+            market = continuous_future(position.root_symbol)
+            
+            if not context.has_stop[market]:
                 order_target(
                     position,
                     0,
                     style=StopOrder(context.stop[market])
                 )
+                context.has_stop[market] = True
                 
                 if context.is_debug:
                     log.debug(
@@ -116,52 +117,52 @@ def handle_data(context, data):
         for market in context.prices.items:
             price = context.prices[market].close[-1]
             
-            compute_average_true_range(context, market)
-            compute_dollar_volatility(context, market)
-            compute_trade_size(context)
+            compute_average_true_range(context)
+            # compute_dollar_volatility(context, market)
+            # compute_trade_size(context)
             
-            if price > context.twenty_day_high[market]\
-                    or price > context.fifty_five_day_high[market]:
-                if is_trade_allowed(context, market, price):
-                    order(
-                        context.contract,
-                        context.trade_size,
-                        style=LimitOrder(price)
-                    )
-                    context.stop[market] = price\
-                        - context.average_true_range\
-                        * context.stop_multiplier
+            # if price > context.twenty_day_high[market]\
+            #         or price > context.fifty_five_day_high[market]:
+            #     if is_trade_allowed(context, market, price):
+            #         order(
+            #             context.contract,
+            #             context.trade_size,
+            #             style=LimitOrder(price)
+            #         )
+            #         context.stop[market] = price\
+            #             - context.average_true_range\
+            #             * context.stop_multiplier
 
-                    if context.is_debug:
-                        log.debug(
-                            'Long %s %i@%.2f'
-                            % (
-                                market.root_symbol,
-                                context.trade_size,
-                                price
-                            )
-                        )
-            if price < context.twenty_day_low[market]\
-                    or price < context.fifty_five_day_low[market]:
-                if is_trade_allowed(context, market, price):
-                    order(
-                        context.contract,
-                        -context.trade_size,
-                        style=LimitOrder(price)
-                    )
-                    context.stop[market] = price\
-                        + context.average_true_range\
-                        * context.stop_multiplier
+            #         if context.is_debug:
+            #             log.debug(
+            #                 'Long %s %i@%.2f'
+            #                 % (
+            #                     market.root_symbol,
+            #                     context.trade_size,
+            #                     price
+            #                 )
+            #             )
+            # if price < context.twenty_day_low[market]\
+            #         or price < context.fifty_five_day_low[market]:
+            #     if is_trade_allowed(context, market, price):
+            #         order(
+            #             context.contract,
+            #             -context.trade_size,
+            #             style=LimitOrder(price)
+            #         )
+            #         context.stop[market] = price\
+            #             + context.average_true_range\
+            #             * context.stop_multiplier
 
-                    if context.is_debug:
-                        log.debug(
-                            'Short %s %i@%.2f'
-                            % (
-                                market.root_symbol,
-                                context.trade_size,
-                                price
-                            )
-                        )
+            #         if context.is_debug:
+            #             log.debug(
+            #                 'Short %s %i@%.2f'
+            #                 % (
+            #                     market.root_symbol,
+            #                     context.trade_size,
+            #                     price
+            #                 )
+            #             )
                         
     if context.is_debug:
         time_taken = (time() - start_time) * 1000
@@ -200,7 +201,7 @@ def validate_markets(context, data):
 
 def clear_stops(context, data):
     """
-    Clear stops.
+    Clear stop flags.
     """
     for market in context.markets:
         context.has_stop[market] = False
@@ -364,7 +365,7 @@ def is_trade_allowed(context, market, price):
     
     return is_trade_allowed
 
-def compute_average_true_range(context, market):
+def compute_average_true_range(context):
     """
     Compute average true range, or N.
     """
@@ -374,18 +375,20 @@ def compute_average_true_range(context, market):
     rolling_window = 21
     moving_average = 20
     
-    context.average_true_range = ATR(
-        context.prices[market].high[-rolling_window:],
-        context.prices[market].low[-rolling_window:],
-        context.prices[market].close[-rolling_window:],
-        timeperiod=moving_average
-    )[-1]
+    for market in context.markets:
+        context.average_true_range[market] = ATR(
+            context.prices[market].high[-rolling_window:],
+            context.prices[market].low[-rolling_window:],
+            context.prices[market].close[-rolling_window:],
+            timeperiod=moving_average
+        )[-1]
     
     if context.is_debug:
         time_taken = (time() - start_time) * 1000
         # log.debug('Executed in %f ms.' % time_taken)
         assert(time_taken < 1024)
-        assert(context.average_true_range > 0)
+        print(context.average_true_range)
+        # assert(context.average_true_range > 0)
 
 def compute_dollar_volatility(context, market):
     """
