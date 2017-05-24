@@ -85,85 +85,84 @@ def handle_data(context, data):
     if context.is_debug:
         start_time = time()
         
-    if context.markets is not None:
-        get_prices(context, data)
-        validate_prices(context)
-        context.prices = context.prices.transpose(2, 1, 0)
-        context.prices = context.prices.reindex()
-        compute_high(context)
-        compute_low(context)
-        get_contracts(context, data)
-        context.open_orders = get_open_orders()
-        compute_average_true_range(context)
-        compute_dollar_volatility(context)
-        compute_trade_size(context)
-        
-        for position in context.portfolio.positions:
-            market = continuous_future(position.root_symbol)
-            
-            if not context.has_stop[market]:
-                order_target(
-                    position,
-                    0,
-                    style=StopOrder(context.stop[market])
+    get_prices(context, data)
+    validate_prices(context)
+    context.prices = context.prices.transpose(2, 1, 0)
+    context.prices = context.prices.reindex()
+    compute_high(context)
+    compute_low(context)
+    get_contracts(context, data)
+    context.open_orders = get_open_orders()
+    compute_average_true_range(context)
+    compute_dollar_volatility(context)
+    compute_trade_size(context)
+
+    for position in context.portfolio.positions:
+        market = continuous_future(position.root_symbol)
+
+        if not context.has_stop[market]:
+            order_target(
+                position,
+                0,
+                style=StopOrder(context.stop[market])
+            )
+            context.has_stop[market] = True
+
+            if context.is_debug:
+                log.debug(
+                    'Stop %s %.2f'
+                    % (
+                        market.root_symbol,
+                        context.stop[market]
+                    )
                 )
-                context.has_stop[market] = True
-                
+
+    for market in context.prices.items:
+        price = context.prices[market].close[-1]
+
+        if price > context.twenty_day_high[market]\
+                or price > context.fifty_five_day_high[market]:
+            if is_trade_allowed(context, market, price):
+                order(
+                    context.contract,
+                    context.trade_size[market],
+                    style=LimitOrder(price)
+                )
+                context.stop[market] = price\
+                    - context.average_true_range[market]\
+                    * context.stop_multiplier
+
                 if context.is_debug:
                     log.debug(
-                        'Stop %s %.2f'
+                        'Long %s %i@%.2f'
                         % (
                             market.root_symbol,
-                            context.stop[market]
+                            context.trade_size[market],
+                            price
                         )
                     )
-        
-        for market in context.prices.items:
-            price = context.prices[market].close[-1]
-            
-            if price > context.twenty_day_high[market]\
-                    or price > context.fifty_five_day_high[market]:
-                if is_trade_allowed(context, market, price):
-                    order(
-                        context.contract,
-                        context.trade_size[market],
-                        style=LimitOrder(price)
-                    )
-                    context.stop[market] = price\
-                        - context.average_true_range[market]\
-                        * context.stop_multiplier
+        if price < context.twenty_day_low[market]\
+                or price < context.fifty_five_day_low[market]:
+            if is_trade_allowed(context, market, price):
+                order(
+                    context.contract,
+                    -context.trade_size[market],
+                    style=LimitOrder(price)
+                )
+                context.stop[market] = price\
+                    + context.average_true_range[market]\
+                    * context.stop_multiplier
 
-                    if context.is_debug:
-                        log.debug(
-                            'Long %s %i@%.2f'
-                            % (
-                                market.root_symbol,
-                                context.trade_size[market],
-                                price
-                            )
+                if context.is_debug:
+                    log.debug(
+                        'Short %s %i@%.2f'
+                        % (
+                            market.root_symbol,
+                            context.trade_size[market],
+                            price
                         )
-            if price < context.twenty_day_low[market]\
-                    or price < context.fifty_five_day_low[market]:
-                if is_trade_allowed(context, market, price):
-                    order(
-                        context.contract,
-                        -context.trade_size[market],
-                        style=LimitOrder(price)
                     )
-                    context.stop[market] = price\
-                        + context.average_true_range[market]\
-                        * context.stop_multiplier
-
-                    if context.is_debug:
-                        log.debug(
-                            'Short %s %i@%.2f'
-                            % (
-                                market.root_symbol,
-                                context.trade_size[market],
-                                price
-                            )
-                        )
-                        
+                    
     if context.is_debug:
         time_taken = (time() - start_time) * 1000
         # log.debug('Executed in %f ms.' % time_taken)
@@ -376,7 +375,6 @@ def compute_dollar_volatility(context):
         time_taken = (time() - start_time) * 1000
         # log.debug('Executed in %f ms.' % time_taken)
         assert(time_taken < 1024)
-        print(context.dollar_volatility)
         assert(len(context.dollar_volatility) > 8)
 
 def compute_trade_size(context):
