@@ -88,15 +88,20 @@ def handle_data(context, data):
         get_contracts(context, data)
         context.open_orders = get_open_orders()
         
+        # for position in context.portfolio.positions:
+        #     print(position)
+            # differentiate between stop order and limit order
+        
         for market in context.prices.items:
             price = context.prices[market].close[-1]
+            
+            compute_average_true_range(context, market)
+            compute_dollar_volatility(context, market)
+            compute_trade_size(context)
             
             if price > context.twenty_day_high[market]\
                     or price > context.fifty_five_day_high[market]:
                 if can_trade(context, market, price):
-                    compute_average_true_range(context, market)
-                    compute_dollar_volatility(context, market)
-                    compute_trade_size(context)
                     order(
                         context.contract,
                         context.trade_size,
@@ -118,9 +123,6 @@ def handle_data(context, data):
             if price < context.twenty_day_low[market]\
                     or price < context.fifty_five_day_low[market]:
                 if can_trade(context, market, price):
-                    compute_average_true_range(context, market)
-                    compute_dollar_volatility(context, market)
-                    compute_trade_size(context)
                     order(
                         context.contract,
                         -context.trade_size,
@@ -317,6 +319,12 @@ def can_trade(context, market, price):
     """
     can_trade = True
     
+    if context.portfolio.cash <= 0:
+        can_trade = False
+        
+    if context.capital <= 0:
+        can_trade = False
+        
     if price < context.price_threshold:
         can_trade = False
         
