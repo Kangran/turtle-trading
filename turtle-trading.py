@@ -331,7 +331,7 @@ def get_contracts(context, data):
 
 def is_trade_allowed(context, market, price):
     """
-    Check if can trade.
+    Check if allowed to trade.
     """
     if context.is_debug:
         start_time = time()
