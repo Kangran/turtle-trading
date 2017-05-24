@@ -65,6 +65,7 @@ def initialize(context):
     context.short_limit = 12
     
     for market in context.markets:
+        context.stop[market] = 0
         context.has_stop[market] = False
     
     schedule_function(
