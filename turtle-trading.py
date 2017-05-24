@@ -64,6 +64,9 @@ def initialize(context):
     context.long_limit = 12
     context.short_limit = 12
     
+    for market in context.markets:
+        context.has_stop[market] = False
+    
     schedule_function(
         func=clear_stops,
         time_rule=time_rules.market_open(minutes=1)
