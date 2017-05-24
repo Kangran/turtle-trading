@@ -175,7 +175,7 @@ def handle_data(context, data):
         
 def clear_stops(context, data):
     """
-    Clear stop flags.
+    Clear stop flags 1 minute after market open.
     """
     if context.is_debug:
         start_time = time()
