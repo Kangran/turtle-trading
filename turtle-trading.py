@@ -97,25 +97,25 @@ def handle_data(context, data):
     compute_dollar_volatility(context)
     compute_trade_size(context)
 
-    for position in context.portfolio.positions:
-        market = continuous_future(position.root_symbol)
+    # for position in context.portfolio.positions:
+    #     market = continuous_future(position.root_symbol)
+        
+    #     if not context.has_stop[market]:
+    #         order_target(
+    #             position,
+    #             0,
+    #             style=StopOrder(context.stop[market])
+    #         )
+    #         context.has_stop[market] = True
 
-        if not context.has_stop[market]:
-            order_target(
-                position,
-                0,
-                style=StopOrder(context.stop[market])
-            )
-            context.has_stop[market] = True
-
-            if context.is_debug:
-                log.debug(
-                    'Stop %s %.2f'
-                    % (
-                        market.root_symbol,
-                        context.stop[market]
-                    )
-                )
+    #         if context.is_debug:
+    #             log.debug(
+    #                 'Stop %s %.2f'
+    #                 % (
+    #                     market.root_symbol,
+    #                     context.stop[market]
+    #                 )
+    #             )
 
     for market in context.prices.items:
         price = context.prices[market].close[-1]
@@ -229,11 +229,6 @@ def validate_prices(context):
             'Null prices for %s. Dropped.'
             % ', '.join(dropped_markets)
         )
-        
-    context.markets = map(
-        lambda market: continuous_future(market),
-        validated_markets
-    )
     
     if context.is_debug:
         time_taken = (time() - start_time) * 1000
@@ -344,7 +339,7 @@ def compute_average_true_range(context):
     rolling_window = 21
     moving_average = 20
     
-    for market in context.markets:
+    for market in context.prices.items:
         context.average_true_range[market] = ATR(
             context.prices[market].high[-rolling_window:],
             context.prices[market].low[-rolling_window:],
@@ -365,7 +360,7 @@ def compute_dollar_volatility(context):
     if context.is_debug:
         start_time = time()
         
-    for market in context.markets:
+    for market in context.prices.items:
         context.contract = context.contracts[market]
         
         context.dollar_volatility[market] = context.contract.multiplier\
@@ -393,10 +388,10 @@ def compute_trade_size(context):
             * context.capital_multiplier
 
     if context.capital <= 0:
-        for market in context.markets:
+        for market in context.prices.items:
             context.trade_size[market] = 0
     else:
-        for market in context.markets:
+        for market in context.prices.items:
             context.trade_size[market] = int(context.capital\
                 * context.capital_risk_per_trade\
                 / context.dollar_volatility[market])
