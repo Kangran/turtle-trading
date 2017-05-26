@@ -17,6 +17,12 @@ Year
 - Cash: USD 1,000,000
 - Trading calendar: US Futures
 
+Maximum
+- Start date: 2015-01-05
+- End date: Today
+- Cash: USD 1,000,000
+- Trading calendar: US Futures
+
 Suppress null warnings after first log message: https://www.quantopian.com/posts/warn-numpy-slash-lib-slash-nanfunctions-dot-py-319-runtimewarning-all-nan-slice-encountered
 
 # initialize
