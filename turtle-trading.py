@@ -7,7 +7,7 @@ def initialize(context):
     """
     context.is_test = True
     context.is_debug = False
-    context.is_info = False
+    context.is_info = True
     
     if context.is_debug:
         start_time = time()
@@ -104,8 +104,28 @@ def handle_data(context, data):
 
     for position in context.portfolio.positions:
         market = continuous_future(position.root_symbol)
+        amount = context.portfolio.positions[position].amount
+        price = context.prices[market].close[-1]
+        cost_basis = context.portfolio.positions[position].cost_basis
         
         if not context.has_stop[market]:
+            if amount > 0 and price > cost_basis:
+                context.stop[market] = price\
+                    - context.average_true_range[market]\
+                    * context.stop_multiplier
+            elif amount > 0 and price < cost_basis:
+                context.stop[market] = cost_basis\
+                    - context.average_true_range[market]\
+                    * context.stop_multiplier
+            elif amount < 0 and price > cost_basis:
+                context.stop[market] = cost_basis\
+                    + context.average_true_range[market]\
+                    * context.stop_multiplier
+            elif amount < 0 and price < cost_basis:
+                context.stop[market] = price\
+                    + context.average_true_range[market]\
+                    * context.stop_multiplier
+            
             order_target(
                 position,
                 0,
@@ -133,9 +153,6 @@ def handle_data(context, data):
                     context.trade_size[market],
                     style=LimitOrder(price)
                 )
-                context.stop[market] = price\
-                    - context.average_true_range[market]\
-                    * context.stop_multiplier
 
                 if context.is_info:
                     log.info(
@@ -154,9 +171,6 @@ def handle_data(context, data):
                     -context.trade_size[market],
                     style=LimitOrder(price)
                 )
-                context.stop[market] = price\
-                    + context.average_true_range[market]\
-                    * context.stop_multiplier
 
                 if context.is_info:
                     log.info(
