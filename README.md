@@ -62,10 +62,25 @@ Average true range: https://mrjbq7.github.io/ta-lib/func_groups/volatility_indic
 TA-Lib module: https://www.quantopian.com/help#ide-module-import
 
 # compute-dollar-volatility
+Compute dollar volatility.
+
 `context.dollar_volatility` = `multiplier` * `average_true_range`
 
 # compute-trade-size
+Compute trade size.
+
 `context.trade_size` = `context.capital` * `context.capital_risk_per_trade` / `context.dollar_volatility`
+
+# place-stop-order
+Place stop order.
+
+If long and `price` is greater than or equal to `cost_basis`, then `context.stop[market] = price - context.average_true_range[market] * context.stop_multiplier`.
+
+If long and `price` is less than `cost_basis`, then `context.stop[market] = cost_basis - context.average_true_range[market] * context.stop_multiplier`.
+
+If short and `price` is greater than or equal to `cost_basis`, then `context.stop[market] = cost_basis + context.average_true_range[market] * context.stop_multiplier`.
+
+If short and `price` is less than `cost_basis`, then `context.stop[market] = price + context.average_true_range[market] * context.stop_multiplier`.
 
 # what
 - Components of a complete trading system
