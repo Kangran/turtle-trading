@@ -102,46 +102,7 @@ def handle_data(context, data):
     compute_dollar_volatility(context)
     compute_trade_size(context)
     place_stop_order(context)
-
-    for market in context.prices.items:
-        price = context.prices[market].close[-1]
-
-        if price > context.twenty_day_high[market]\
-                or price > context.fifty_five_day_high[market]:
-            if is_trade_allowed(context, market, price):
-                order(
-                    context.contract,
-                    context.trade_size[market],
-                    style=LimitOrder(price)
-                )
-
-                if context.is_info:
-                    log.info(
-                        'Long %s %i@%.2f'
-                        % (
-                            market.root_symbol,
-                            context.trade_size[market],
-                            price
-                        )
-                    )
-        if price < context.twenty_day_low[market]\
-                or price < context.fifty_five_day_low[market]:
-            if is_trade_allowed(context, market, price):
-                order(
-                    context.contract,
-                    -context.trade_size[market],
-                    style=LimitOrder(price)
-                )
-
-                if context.is_info:
-                    log.info(
-                        'Short %s %i@%.2f'
-                        % (
-                            market.root_symbol,
-                            context.trade_size[market],
-                            price
-                        )
-                    )
+    detect_entry_signals(context)
         
     if context.is_debug:
         time_taken = (time() - start_time) * 1000
@@ -425,7 +386,7 @@ def place_stop_order(context):
         cost_basis = context.portfolio.positions[position].cost_basis
         
         if not context.has_stop[market]:
-            if amount > 0 and price > cost_basis:
+            if amount > 0 and price >= cost_basis:
                 context.stop[market] = price\
                     - context.average_true_range[market]\
                     * context.stop_multiplier
@@ -433,7 +394,7 @@ def place_stop_order(context):
                 context.stop[market] = cost_basis\
                     - context.average_true_range[market]\
                     * context.stop_multiplier
-            elif amount < 0 and price > cost_basis:
+            elif amount < 0 and price >= cost_basis:
                 context.stop[market] = cost_basis\
                     + context.average_true_range[market]\
                     * context.stop_multiplier
@@ -457,3 +418,47 @@ def place_stop_order(context):
                         context.stop[market]
                     )
                 )
+
+def detect_entry_signals(context):
+    """
+    Place limit order on 20 or 55 day breakout.
+    """
+    for market in context.prices.items:
+        price = context.prices[market].close[-1]
+
+        if price > context.twenty_day_high[market]\
+                or price > context.fifty_five_day_high[market]:
+            if is_trade_allowed(context, market, price):
+                order(
+                    context.contract,
+                    context.trade_size[market],
+                    style=LimitOrder(price)
+                )
+
+                if context.is_info:
+                    log.info(
+                        'Long %s %i@%.2f'
+                        % (
+                            market.root_symbol,
+                            context.trade_size[market],
+                            price
+                        )
+                    )
+        if price < context.twenty_day_low[market]\
+                or price < context.fifty_five_day_low[market]:
+            if is_trade_allowed(context, market, price):
+                order(
+                    context.contract,
+                    -context.trade_size[market],
+                    style=LimitOrder(price)
+                )
+
+                if context.is_info:
+                    log.info(
+                        'Short %s %i@%.2f'
+                        % (
+                            market.root_symbol,
+                            context.trade_size[market],
+                            price
+                        )
+                    )
