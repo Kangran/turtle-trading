@@ -7,7 +7,7 @@ def initialize(context):
     """
     context.is_test = True
     context.is_debug = False
-    context.is_info = True
+    context.is_info = False
     
     if context.is_debug:
         start_time = time()
@@ -145,7 +145,7 @@ def get_prices(context, data):
     if context.is_test:
         assert(context.prices.shape[0] == 3)
         assert(context.prices.shape[1] == 22)
-        assert(context.prices.shape[2] > 8)
+        assert(context.prices.shape[2] > 0)
         
     if context.is_debug:
         time_taken = (time() - start_time) * 1000
@@ -184,7 +184,7 @@ def validate_prices(context):
     if context.is_test:
         assert(context.prices.shape[0] == 3)
         assert(context.prices.shape[1] == 22)
-        assert(context.prices.shape[2] > 8)
+        assert(context.prices.shape[2] > 0)
         
     if context.is_debug:
         time_taken = (time() - start_time) * 1000
@@ -209,8 +209,8 @@ def compute_high(context):
             .max()
             
     if context.is_test:
-        assert(len(context.twenty_day_high) > 8)
-        assert(len(context.fifty_five_day_high) > 8)
+        assert(len(context.twenty_day_high) > 0)
+        assert(len(context.fifty_five_day_high) > 0)
         
     if context.is_debug:
         time_taken = (time() - start_time) * 1000
@@ -235,8 +235,8 @@ def compute_low(context):
             .min()
             
     if context.is_test:
-        assert(len(context.twenty_day_low) > 8)
-        assert(len(context.fifty_five_day_low) > 8)
+        assert(len(context.twenty_day_low) > 0)
+        assert(len(context.fifty_five_day_low) > 0)
         
     if context.is_debug:
         time_taken = (time() - start_time) * 1000
@@ -258,7 +258,7 @@ def get_contracts(context, data):
     )
     
     if context.is_test:
-        assert(context.contracts.shape[0] > 8)
+        assert(context.contracts.shape[0] > 0)
         
     if context.is_debug:
         time_taken = (time() - start_time) * 1000
@@ -315,7 +315,7 @@ def compute_average_true_range(context):
         )[-1]
         
     if context.is_test:
-        assert(len(context.average_true_range) > 8)
+        assert(len(context.average_true_range) > 0)
         
     if context.is_debug:
         time_taken = (time() - start_time) * 1000
@@ -336,7 +336,7 @@ def compute_dollar_volatility(context):
             * context.average_true_range[market]
             
     if context.is_test:
-        assert(len(context.dollar_volatility) > 8)
+        assert(len(context.dollar_volatility) > 0)
         
     if context.is_debug:
         time_taken = (time() - start_time) * 1000
@@ -368,7 +368,7 @@ def compute_trade_size(context):
                 / context.dollar_volatility[market])
             
     if context.is_test:
-        assert(len(context.trade_size) >= 8)
+        assert(len(context.trade_size) > 0)
         
     if context.is_debug:
         time_taken = (time() - start_time) * 1000
@@ -382,8 +382,12 @@ def place_stop_order(context):
     for position in context.portfolio.positions:
         market = continuous_future(position.root_symbol)
         amount = context.portfolio.positions[position].amount
-        price = context.prices[market].close[-1]
         cost_basis = context.portfolio.positions[position].cost_basis
+        
+        try:
+            price = context.prices[market].close[-1]
+        except KeyError:
+            price = 0
         
         if not context.has_stop[market]:
             if amount > 0 and price >= cost_basis:
@@ -394,12 +398,20 @@ def place_stop_order(context):
                 context.stop[market] = cost_basis\
                     - context.average_true_range[market]\
                     * context.stop_multiplier
+            elif amount > 0 and price == 0:
+                context.stop[market] = cost_basis\
+                    - context.average_true_range[market]\
+                    * context.stop_multiplier
             elif amount < 0 and price >= cost_basis:
                 context.stop[market] = cost_basis\
                     + context.average_true_range[market]\
                     * context.stop_multiplier
             elif amount < 0 and price < cost_basis:
                 context.stop[market] = price\
+                    + context.average_true_range[market]\
+                    * context.stop_multiplier
+            elif amount < 0 and price == 0:
+                context.stop[market] = cost_basis\
                     + context.average_true_range[market]\
                     * context.stop_multiplier
             
