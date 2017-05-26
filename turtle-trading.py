@@ -101,46 +101,7 @@ def handle_data(context, data):
     compute_average_true_range(context)
     compute_dollar_volatility(context)
     compute_trade_size(context)
-
-    for position in context.portfolio.positions:
-        market = continuous_future(position.root_symbol)
-        amount = context.portfolio.positions[position].amount
-        price = context.prices[market].close[-1]
-        cost_basis = context.portfolio.positions[position].cost_basis
-        
-        if not context.has_stop[market]:
-            if amount > 0 and price > cost_basis:
-                context.stop[market] = price\
-                    - context.average_true_range[market]\
-                    * context.stop_multiplier
-            elif amount > 0 and price < cost_basis:
-                context.stop[market] = cost_basis\
-                    - context.average_true_range[market]\
-                    * context.stop_multiplier
-            elif amount < 0 and price > cost_basis:
-                context.stop[market] = cost_basis\
-                    + context.average_true_range[market]\
-                    * context.stop_multiplier
-            elif amount < 0 and price < cost_basis:
-                context.stop[market] = price\
-                    + context.average_true_range[market]\
-                    * context.stop_multiplier
-            
-            order_target(
-                position,
-                0,
-                style=StopOrder(context.stop[market])
-            )
-            context.has_stop[market] = True
-
-            if context.is_info:
-                log.info(
-                    'Stop %s %.2f'
-                    % (
-                        market.root_symbol,
-                        context.stop[market]
-                    )
-                )
+    place_stop_order(context)
 
     for market in context.prices.items:
         price = context.prices[market].close[-1]
@@ -452,3 +413,47 @@ def compute_trade_size(context):
         time_taken = (time() - start_time) * 1000
         log.debug('Executed in %f ms.' % time_taken)
         assert(time_taken < 1024)
+
+def place_stop_order(context):
+    """
+    Place stop order.
+    """
+    for position in context.portfolio.positions:
+        market = continuous_future(position.root_symbol)
+        amount = context.portfolio.positions[position].amount
+        price = context.prices[market].close[-1]
+        cost_basis = context.portfolio.positions[position].cost_basis
+        
+        if not context.has_stop[market]:
+            if amount > 0 and price > cost_basis:
+                context.stop[market] = price\
+                    - context.average_true_range[market]\
+                    * context.stop_multiplier
+            elif amount > 0 and price < cost_basis:
+                context.stop[market] = cost_basis\
+                    - context.average_true_range[market]\
+                    * context.stop_multiplier
+            elif amount < 0 and price > cost_basis:
+                context.stop[market] = cost_basis\
+                    + context.average_true_range[market]\
+                    * context.stop_multiplier
+            elif amount < 0 and price < cost_basis:
+                context.stop[market] = price\
+                    + context.average_true_range[market]\
+                    * context.stop_multiplier
+            
+            order_target(
+                position,
+                0,
+                style=StopOrder(context.stop[market])
+            )
+            context.has_stop[market] = True
+
+            if context.is_info:
+                log.info(
+                    'Stop %s %.2f'
+                    % (
+                        market.root_symbol,
+                        context.stop[market]
+                    )
+                )
