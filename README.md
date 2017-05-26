@@ -18,7 +18,7 @@ Year
 - Trading calendar: US Futures
 
 Maximum
-- Start date: 2015-01-05
+- Start date: 2002-02-01
 - End date: Today
 - Cash: USD 1,000,000
 - Trading calendar: US Futures
