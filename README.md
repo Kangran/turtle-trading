@@ -82,6 +82,9 @@ If short and `price` is greater than or equal to `cost_basis`, then `context.sto
 
 If short and `price` is less than `cost_basis`, then `context.stop[market] = price + context.average_true_range[market] * context.stop_multiplier`.
 
+# detect-entry-signals
+Place limit order on 20 or 55 day breakout.
+
 # what
 - Components of a complete trading system
     - Markets: What to trade
