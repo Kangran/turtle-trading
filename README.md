@@ -1,6 +1,23 @@
 # turtle-trading
 Profit using trend trading
 
+# return
+2002-01-01 to 2003-01-01:
+2003-01-01 to 2004-01-01:
+2004-01-01 to 2005-01-01:
+2005-01-01 to 2006-01-01:
+2006-01-01 to 2007-01-01:
+2007-01-01 to 2008-01-01:
+2008-01-01 to 2009-01-01:
+2009-01-01 to 2010-01-01:
+2010-01-01 to 2011-01-01:
+2011-01-01 to 2012-01-01:
+2012-01-01 to 2013-01-01:
+2013-01-01 to 2014-01-01:
+2014-01-01 to 2015-01-01:
+2015-01-01 to 2016-01-01:
+2016-01-01 to 2017-01-01:
+
 # strategy
 See https://github.com/vyq/turtle-trading/raw/master/the-original-turtle-trading-rules.pdf
 
@@ -11,15 +28,9 @@ Week
 - Cash: USD 1,000,000
 - Trading calendar: US Futures
 
-Year
-- Start date: 2016-01-01
-- End date: 2017-01-01
-- Cash: USD 1,000,000
-- Trading calendar: US Futures
-
 Maximum
 - Start date: 2003-08-05
-- End date: Today
+- End date: 2017-05-25
 - Cash: USD 1,000,000
 - Trading calendar: US Futures
 
@@ -91,34 +102,6 @@ If short and `price` is less than `cost_basis`, then `context.stop[market] = pri
 # detect-entry-signals
 Place limit order on 20 or 55 day breakout.
 
-# what
-- Components of a complete trading system
-    - Markets: What to trade
-        - High trading volume
-        - Trend well
-    - Position sizing: How much to trade
-        - Money management
-    - Entries: When to enter trade
-        - Exact price and market conditions to enter
-    - Stops: When to cut loss
-        - Tighten stops based on 2 times volatility from previous fill price, or use 0.5 times volatility for each unit
-    - Exits: When to exit trade
-        - Maintain discipline to exit
-    - Tactics: How to trade
-        - Do not place stop orders
-        - Use limit orders
-        - If multiple signals
-            - Rank markets that moved the most in terms of volatility
-            - Long strongest market
-            - Short weakest market
-        - Do not roll over expiring contract unless breakout
-        - Roll over into new contract month a few weeks before expiration, unless current position performs better
-            - Review volume and open interest
-- Further study
-    - Trading psychology
-    - Money management
-    - Trading research
-
 # reflect
 Markets are fixed or dynamic:
 - Fixed markets allow consistency over time
@@ -141,3 +124,5 @@ Context has limitations:
 Orders placed at end of day may fail to fill because of insufficient liquidity.
 
 `context.portfolio.positions[position].amount` is negative if position is short.
+
+There are days where `data.history()` returns null prices for all markets.
