@@ -60,11 +60,6 @@ def initialize(context):
     context.stop = {}
     context.has_stop = {}
     context.stop_multiplier = 2
-    context.single_market_limit = 4
-    context.closely_correlated_market_limit = 6
-    context.loosely_correlated_market_limit = 6
-    context.long_limit = 12
-    context.short_limit = 12
     
     for market in context.markets:
         context.stop[market] = 0
