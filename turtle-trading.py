@@ -145,7 +145,6 @@ def get_prices(context, data):
     if context.is_test:
         assert(context.prices.shape[0] == 3)
         assert(context.prices.shape[1] == 22)
-        assert(context.prices.shape[2] > 0)
         
     if context.is_debug:
         time_taken = (time() - start_time) * 1000
