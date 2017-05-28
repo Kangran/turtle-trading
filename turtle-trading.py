@@ -42,6 +42,7 @@ def initialize(context):
     context.average_true_range = {}
     context.dollar_volatility = {}
     context.trade_size = {}
+    context.orders = {}
     
     # Signal
     context.twenty_day_breakout = 20
@@ -61,14 +62,15 @@ def initialize(context):
     context.has_stop = {}
     context.stop_multiplier = 2
     context.market_limit = 4
-    context.market_limits = {}
+    context.market_risk = {}
     context.direction_limit = 12
-    context.long_direction = 0
-    context.short_direction = 0
+    context.long_risk = 0
+    context.short_risk = 0
     
     for market in context.markets:
         context.stop[market] = 0
         context.has_stop[market] = False
+        context.market_risk[market] = 0
     
     schedule_function(
         func=clear_stops,
