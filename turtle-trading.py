@@ -296,7 +296,13 @@ def is_trade_allowed(context, market, price):
             
     if context.market_risk[market] > context.market_risk_limit:
         is_trade_allowed = False
-            
+        
+    if context.long_risk > context.direction_risk_limit:
+        is_trade_allowed = False
+        
+    if context.short_risk > context.direction_risk_limit:
+        is_trade_allowed = False
+        
     if context.is_debug:
         time_taken = (time() - start_time) * 1000
         log.debug('Executed in %f ms.' % time_taken)
