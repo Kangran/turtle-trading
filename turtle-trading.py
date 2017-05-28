@@ -11,7 +11,7 @@ def initialize(context):
     
     if context.is_debug:
         start_time = time()
-    
+
     # Data
     context.symbols = [
         'BP',
@@ -77,7 +77,7 @@ def initialize(context):
         context.stop[market] = 0
         context.has_stop[market] = False
         context.market_risk[market] = 0
-    
+
     schedule_function(
         func=clear_stops,
         time_rule=time_rules.market_open(minutes=1)
@@ -102,22 +102,22 @@ def handle_data(context, data):
     validate_prices(context)
     context.prices = context.prices.transpose(2, 1, 0)
     context.prices = context.prices.reindex()
-    compute_high(context)
-    compute_low(context)
+    compute_highs(context)
+    compute_lows(context)
     get_contracts(context, data)
     context.open_orders = get_open_orders()
-    compute_average_true_range(context)
-    compute_dollar_volatility(context)
-    compute_trade_size(context)
-    update_risk(context)
-    place_stop_order(context)
-    detect_entry_signal(context)
+    compute_average_true_ranges(context)
+    compute_dollar_volatilities(context)
+    compute_trade_sizes(context)
+    update_risks(context)
+    place_stop_orders(context)
+    detect_entry_signals(context)
     
     if context.is_debug:
         time_taken = (time() - start_time) * 1000
         log.debug('Executed in %f ms.' % time_taken)
         assert(time_taken < 8192)
-        
+
 def clear_stops(context, data):
     """
     Clear stop flags 1 minute after market open.
@@ -188,7 +188,7 @@ def validate_prices(context):
             'Null prices for %s. Dropped.'
             % ', '.join(dropped_markets)
         )
-    
+
     if context.is_test:
         assert(context.prices.shape[0] == 3)
         assert(context.prices.shape[1] == 22)
@@ -198,7 +198,7 @@ def validate_prices(context):
         log.debug('Executed in %f ms.' % time_taken)
         assert(time_taken < 1024)
 
-def compute_high(context):
+def compute_highs(context):
     """
     Compute 20 and 55 day high.
     """
@@ -224,7 +224,7 @@ def compute_high(context):
         log.debug('Executed in %f ms.' % time_taken)
         assert(time_taken < 1024)
 
-def compute_low(context):
+def compute_lows(context):
     """
     Compute 20 and 55 day low.
     """
@@ -240,7 +240,7 @@ def compute_low(context):
             .prices[market]\
             .low[-context.fifty_five_day_breakout-1:-1]\
             .min()
-            
+
     if context.is_test:
         assert(len(context.twenty_day_low) > 0)
         assert(len(context.fifty_five_day_low) > 0)
@@ -310,7 +310,7 @@ def is_trade_allowed(context, market, price):
         
     return is_trade_allowed
 
-def compute_average_true_range(context):
+def compute_average_true_ranges(context):
     """
     Compute average true range, or N.
     """
@@ -336,7 +336,7 @@ def compute_average_true_range(context):
         log.debug('Executed in %f ms.' % time_taken)
         assert(time_taken < 1024)
 
-def compute_dollar_volatility(context):
+def compute_dollar_volatilities(context):
     """
     Compute dollar volatility.
     """
@@ -357,7 +357,7 @@ def compute_dollar_volatility(context):
         log.debug('Executed in %f ms.' % time_taken)
         assert(time_taken < 1024)
 
-def compute_trade_size(context):
+def compute_trade_sizes(context):
     """
     Compute trade size.
     """
@@ -380,7 +380,7 @@ def compute_trade_size(context):
             context.trade_size[market] = int(context.capital\
                 * context.capital_risk_per_trade\
                 / context.dollar_volatility[market])
-            
+
     if context.is_test:
         assert(len(context.trade_size) > 0)
         
@@ -389,7 +389,7 @@ def compute_trade_size(context):
         log.debug('Executed in %f ms.' % time_taken)
         assert(time_taken < 1024)
 
-def update_risk(context):
+def update_risks(context):
     """
     Update risk.
     """
@@ -420,7 +420,7 @@ def update_risk(context):
                     or a_order.status == context.rejected:
                 context.orders[market].remove(order_identifier)
 
-def place_stop_order(context):
+def place_stop_orders(context):
     """
     Place stop order.
     """
@@ -433,7 +433,7 @@ def place_stop_order(context):
             price = context.prices[market].close[-1]
         except KeyError:
             price = 0
-        
+
         if not context.has_stop[market]:
             if amount > 0 and price >= cost_basis:
                 context.stop[market] = price\
@@ -459,7 +459,7 @@ def place_stop_order(context):
                 context.stop[market] = cost_basis\
                     + context.average_true_range[market]\
                     * context.stop_multiplier
-            
+
             order_identifier = order_target(
                 position,
                 0,
@@ -478,7 +478,7 @@ def place_stop_order(context):
                     )
                 )
 
-def detect_entry_signal(context):
+def detect_entry_signals(context):
     """
     Place limit order on 20 or 55 day breakout.
     """
@@ -515,7 +515,7 @@ def detect_entry_signal(context):
                 )
                 if order_identifier is not None:
                     context.orders[market].append(order_identifier)
-
+                    
                 if context.is_info:
                     log.info(
                         'Short %s %i@%.2f'
