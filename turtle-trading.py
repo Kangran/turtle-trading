@@ -7,7 +7,7 @@ def initialize(context):
     """
     context.is_test = True
     context.is_debug = False
-    context.is_info = False
+    context.is_info = True
     
     if context.is_debug:
         start_time = time()
