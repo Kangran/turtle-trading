@@ -61,9 +61,9 @@ def initialize(context):
     context.stop = {}
     context.has_stop = {}
     context.stop_multiplier = 2
-    context.market_limit = 4
+    context.market_risk_limit = 4
     context.market_risk = {}
-    context.direction_limit = 12
+    context.direction_risk_limit = 12
     context.long_risk = 0
     context.short_risk = 0
     
@@ -104,8 +104,9 @@ def handle_data(context, data):
     compute_average_true_range(context)
     compute_dollar_volatility(context)
     compute_trade_size(context)
+    update_risk_limit(context)
     place_stop_order(context)
-    detect_entry_signals(context)
+    detect_entry_signal(context)
     
     if context.is_debug:
         time_taken = (time() - start_time) * 1000
@@ -373,6 +374,12 @@ def compute_trade_size(context):
         time_taken = (time() - start_time) * 1000
         log.debug('Executed in %f ms.' % time_taken)
         assert(time_taken < 1024)
+
+def update_risk_limit(context):
+    """
+    Update risk limit.
+    """
+    pass
 
 def place_stop_order(context):
     """
