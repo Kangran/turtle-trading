@@ -493,6 +493,7 @@ def detect_entry_signals(context):
                     context.trade_size[market],
                     style=LimitOrder(price)
                 )
+
                 if order_identifier is not None:
                     context.orders[market].append(order_identifier)
 
@@ -515,7 +516,7 @@ def detect_entry_signals(context):
                 )
                 if order_identifier is not None:
                     context.orders[market].append(order_identifier)
-                    
+
                 if context.is_info:
                     log.info(
                         'Short %s %i@%.2f'
