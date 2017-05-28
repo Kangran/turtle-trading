@@ -109,7 +109,7 @@ def handle_data(context, data):
     compute_average_true_range(context)
     compute_dollar_volatility(context)
     compute_trade_size(context)
-    update_risk_limit(context)
+    update_risk(context)
     place_stop_order(context)
     detect_entry_signal(context)
     
@@ -383,9 +383,9 @@ def compute_trade_size(context):
         log.debug('Executed in %f ms.' % time_taken)
         assert(time_taken < 1024)
 
-def update_risk_limit(context):
+def update_risk(context):
     """
-    Update risk limit.
+    Update risk.
     """
     for market in context.orders:
         for order_identifier in context.orders[market]:
@@ -399,6 +399,7 @@ def update_risk_limit(context):
                         context.long_risk += 1
                     if a_order.amount < 0:
                         context.short_risk += 1
+                        
                 if a_order.stop_reached:
                     context.market_risk[market] -= 1
                     
@@ -406,6 +407,7 @@ def update_risk_limit(context):
                         context.long_risk -= 1
                     if a_order.amount < 0:
                         context.short_risk -= 1
+                        
                 context.orders[market].remove(order_identifier)
                 
             if a_order.status == context.canceled\
