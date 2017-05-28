@@ -83,6 +83,11 @@ def initialize(context):
         time_rule=time_rules.market_open(minutes=1)
     )
     
+    schedule_function(
+        func=log_risks,
+        time_rule=time_rules.market_close(minutes=1)
+    )
+    
     if context.is_test:
         assert(len(context.symbols) == 16)
         
@@ -120,7 +125,7 @@ def handle_data(context, data):
 
 def clear_stops(context, data):
     """
-    Clear stop flags 1 minute after market open.
+    Clear stops 1 minute after market open.
     """
     if context.is_debug:
         start_time = time()
@@ -132,6 +137,15 @@ def clear_stops(context, data):
         time_taken = (time() - start_time) * 1000
         log.debug('Executed in %f ms.' % time_taken)
         assert(time_taken < 1024)
+
+def log_risks(context, data):
+    """
+    Log long and short risk 1 minute before market close.
+    """
+    record(
+        long_risk = context.long_risk,
+        short_risk = context.short_risk
+    )
 
 def get_prices(context, data):
     """
@@ -312,7 +326,7 @@ def is_trade_allowed(context, market, price):
 
 def compute_average_true_ranges(context):
     """
-    Compute average true range, or N.
+    Compute average true ranges, or N.
     """
     if context.is_debug:
         start_time = time()
@@ -338,7 +352,7 @@ def compute_average_true_ranges(context):
 
 def compute_dollar_volatilities(context):
     """
-    Compute dollar volatility.
+    Compute dollar volatilities, or dollars per point.
     """
     if context.is_debug:
         start_time = time()
@@ -359,7 +373,7 @@ def compute_dollar_volatilities(context):
 
 def compute_trade_sizes(context):
     """
-    Compute trade size.
+    Compute trade sizes, or amount per trade.
     """
     if context.is_debug:
         start_time = time()
@@ -391,7 +405,7 @@ def compute_trade_sizes(context):
 
 def update_risks(context):
     """
-    Update risk.
+    Update long, short, and market risk.
     """
     for market in context.orders:
         for order_identifier in context.orders[market]:
@@ -422,7 +436,7 @@ def update_risks(context):
 
 def place_stop_orders(context):
     """
-    Place stop order.
+    Place stop orders at 2 times average true range.
     """
     for position in context.portfolio.positions:
         market = continuous_future(position.root_symbol)
@@ -480,7 +494,7 @@ def place_stop_orders(context):
 
 def detect_entry_signals(context):
     """
-    Place limit order on 20 or 55 day breakout.
+    Place limit orders on 20 or 55 day breakout.
     """
     for market in context.prices.items:
         price = context.prices[market].close[-1]

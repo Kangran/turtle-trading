@@ -56,10 +56,10 @@ Get high, low, and close prices. Get 22 daily bars for computing average true ra
 # validate-prices
 Drop markets with null prices. Set markets as validated markets.
 
-# compute-high
+# compute-highs
 Compute 20 and 55 day high. Get highest high for the past 20 and 55 days.
 
-# compute-low
+# compute-lows
 Compute 20 and 55 day low. Get lowest low for the past 20 and 55 days.
 
 # get-contracts
@@ -74,24 +74,24 @@ Do not trade if:
 - Price is less than 1
 - Open order exists
 
-# compute-average-true-range
+# compute-average-true-ranges
 Compute average true range, or N, using ATR in TA-Lib. Use a rolling window that is 1 day larger than the moving average.
 
 Average true range: https://mrjbq7.github.io/ta-lib/func_groups/volatility_indicators.html
 
 TA-Lib module: https://www.quantopian.com/help#ide-module-import
 
-# compute-dollar-volatility
+# compute-dollar-volatilities
 Compute dollar volatility.
 
 `context.dollar_volatility` = `multiplier` * `average_true_range`
 
-# compute-trade-size
+# compute-trade-sizes
 Compute trade size.
 
 `context.trade_size` = `context.capital` * `context.capital_risk_per_trade` / `context.dollar_volatility`
 
-# place-stop-order
+# place-stop-orders
 Place stop order.
 
 If long and `price` is greater than or equal to `cost_basis`, then `context.stop[market] = price - context.average_true_range[market] * context.stop_multiplier`.
