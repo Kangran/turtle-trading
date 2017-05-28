@@ -60,6 +60,11 @@ def initialize(context):
     context.stop = {}
     context.has_stop = {}
     context.stop_multiplier = 2
+    context.market_limit = 4
+    context.market_limits = {}
+    context.direction_limit = 12
+    context.long_direction = 0
+    context.short_direction = 0
     
     for market in context.markets:
         context.stop[market] = 0
