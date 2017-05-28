@@ -55,7 +55,7 @@ def initialize(context):
     # Risk
     context.price_threshold = 1
     context.capital = context.portfolio.starting_cash
-    context.profit = None
+    context.profit = 0
     context.capital_risk_per_trade = 0.01
     context.capital_multiplier = 2
     context.stop = {}
