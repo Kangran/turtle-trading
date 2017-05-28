@@ -72,6 +72,8 @@ def initialize(context):
     context.filled = 1
     context.canceled = 2
     context.rejected = 3
+    context.long_direction = 'long'
+    context.short_direction = 'short'
     
     for market in context.markets:
         context.orders[market] = []
@@ -287,7 +289,7 @@ def get_contracts(context, data):
         log.debug('Executed in %f ms.' % time_taken)
         assert(time_taken < 1024)
 
-def is_trade_allowed(context, market):
+def is_trade_allowed(context, market, direction):
     """
     Check if allowed to trade.
     """
@@ -312,10 +314,12 @@ def is_trade_allowed(context, market):
     if context.market_risk[market] > context.market_risk_limit:
         is_trade_allowed = False
         
-    if context.long_risk > context.direction_risk_limit:
+    if direction == context.long_direction\
+            and context.long_risk > context.direction_risk_limit:
         is_trade_allowed = False
         
-    if context.short_risk > context.direction_risk_limit:
+    if direction == context.short_direction\
+            and context.short_risk > context.direction_risk_limit:
         is_trade_allowed = False
         
     if context.is_debug:
@@ -502,7 +506,7 @@ def detect_entry_signals(context):
 
         if context.price > context.twenty_day_high[market]\
                 or context.price > context.fifty_five_day_high[market]:
-            if is_trade_allowed(context, market):
+            if is_trade_allowed(context, market, context.long_direction):
                 order_identifier = order(
                     context.contract,
                     context.trade_size[market],
@@ -523,7 +527,7 @@ def detect_entry_signals(context):
                     )
         if context.price < context.twenty_day_low[market]\
                 or context.price < context.fifty_five_day_low[market]:
-            if is_trade_allowed(context, market):
+            if is_trade_allowed(context, market, context.short_direction):
                 order_identifier = order(
                     context.contract,
                     -context.trade_size[market],
