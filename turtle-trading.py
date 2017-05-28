@@ -266,7 +266,7 @@ def compute_lows(context):
 
 def get_contracts(context, data):
     """
-    Get current contracts.
+    Get futures contracts.
     """
     if context.is_debug:
         start_time = time()
@@ -405,7 +405,7 @@ def compute_trade_sizes(context):
 
 def update_risks(context):
     """
-    Update long, short, and market risk.
+    Update long, short, and market risks.
     """
     for market in context.orders:
         for order_identifier in context.orders[market]:
