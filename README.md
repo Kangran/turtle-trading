@@ -137,3 +137,5 @@ Orders placed at end of day may fail to fill because of insufficient liquidity.
 `context.portfolio.positions[position].amount` is negative if position is short.
 
 There are days where `data.history()` returns null prices for all markets.
+
+Risk limits do not account for partial fills.
