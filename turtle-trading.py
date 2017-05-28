@@ -392,7 +392,14 @@ def update_risk_limit(context):
             a_order = get_order(order_identifier)
             
             if a_order.status == context.filled:
-                context.market_risk[market] += 1
+                if a_order.limit_reached:
+                    context.market_risk[market] += 1
+                if a_order.stop_reached:
+                    context.market_risk[market] -= 1
+                if a_order.amount > 0:
+                    context.long_risk += 1
+                if a_order.amount < 0:
+                    context.short_risk -= 1
                 context.orders[market].remove(order_identifier)
                 
             if a_order.status == context.canceled\
