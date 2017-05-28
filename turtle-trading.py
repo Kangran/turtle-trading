@@ -42,7 +42,6 @@ def initialize(context):
     context.average_true_range = {}
     context.dollar_volatility = {}
     context.trade_size = {}
-    context.orders = {}
     
     # Signal
     context.twenty_day_breakout = 20
@@ -66,6 +65,10 @@ def initialize(context):
     context.direction_risk_limit = 12
     context.long_risk = 0
     context.short_risk = 0
+    
+    # Order
+    context.orders = {}
+    context.filled = 1
     
     for market in context.markets:
         context.orders[market] = []
@@ -379,7 +382,13 @@ def update_risk_limit(context):
     """
     Update risk limit.
     """
-    pass
+    for market in context.orders:
+        for order_identifier in context.orders[market]:
+            status = get_order(order_identifier).status
+            
+            if status == context.filled:
+                context.market_risk[market] += 1
+                context.orders[market].remove(order_identifier)
 
 def place_stop_order(context):
     """
