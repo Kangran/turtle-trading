@@ -68,6 +68,7 @@ def initialize(context):
     context.short_risk = 0
     
     for market in context.markets:
+        context.orders[market] = []
         context.stop[market] = 0
         context.has_stop[market] = False
         context.market_risk[market] = 0
@@ -413,12 +414,14 @@ def place_stop_order(context):
                     + context.average_true_range[market]\
                     * context.stop_multiplier
             
-            order_target(
+            order = order_target(
                 position,
                 0,
                 style=StopOrder(context.stop[market])
             )
-            context.has_stop[market] = True
+            if order not None:
+                context.orders[market].append(order)
+                context.has_stop[market] = True
 
             if context.is_info:
                 log.info(
@@ -439,11 +442,13 @@ def detect_entry_signals(context):
         if price > context.twenty_day_high[market]\
                 or price > context.fifty_five_day_high[market]:
             if is_trade_allowed(context, market, price):
-                order(
+                order = order(
                     context.contract,
                     context.trade_size[market],
                     style=LimitOrder(price)
                 )
+                if order not None:
+                    context.orders[market].append(order)
 
                 if context.is_info:
                     log.info(
@@ -457,11 +462,13 @@ def detect_entry_signals(context):
         if price < context.twenty_day_low[market]\
                 or price < context.fifty_five_day_low[market]:
             if is_trade_allowed(context, market, price):
-                order(
+                order = order(
                     context.contract,
                     -context.trade_size[market],
                     style=LimitOrder(price)
                 )
+                if order not None:
+                    context.orders[market].append(order)
 
                 if context.is_info:
                     log.info(
