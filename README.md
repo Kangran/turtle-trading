@@ -45,16 +45,19 @@ Initialize parameters. Executes at 1970-01-01 7 PM UTC-4. Intersect Quantopian f
 Universe: https://www.quantopian.com/help#available-futures
 
 # handle-data
-Process data every minute. Executes from 6:31 AM to 5 PM UTC-4. Long or short markets based on entry signals. Close positions based on stops or exit signals.
+Process data every minute. Executes from 6:31 AM to 5 PM UTC-4.
 
 # clear-stops
-Clear stop flags.
+Clear stops 1 minute after market open.
+
+# log-risks
+Log long and short risk 1 minute before market close.
 
 # get-prices
 Get high, low, and close prices. Get 22 daily bars for computing average true range.
 
 # validate-prices
-Drop markets with null prices. Set markets as validated markets.
+Drop markets with null prices.
 
 # compute-highs
 Compute 20 and 55 day high. Get highest high for the past 20 and 55 days.
@@ -63,7 +66,7 @@ Compute 20 and 55 day high. Get highest high for the past 20 and 55 days.
 Compute 20 and 55 day low. Get lowest low for the past 20 and 55 days.
 
 # get-contracts
-Get current contracts.
+Get futures contracts.
 
 # is-trade-allowed
 Check if allowed to trade.
@@ -72,27 +75,32 @@ Do not trade if:
 - Cash is less than or equal to 0
 - Capital is less than or equal to 0
 - Price is less than 1
-- Open order exists
+- Open order exists for this market
+- Exceed market risk limit
+- Exceed direction risk limit
 
 # compute-average-true-ranges
-Compute average true range, or N, using ATR in TA-Lib. Use a rolling window that is 1 day larger than the moving average.
+Compute average true ranges, or N. Use a rolling window that is 1 day larger than the moving average.
 
 Average true range: https://mrjbq7.github.io/ta-lib/func_groups/volatility_indicators.html
 
 TA-Lib module: https://www.quantopian.com/help#ide-module-import
 
 # compute-dollar-volatilities
-Compute dollar volatility.
+Compute dollar volatilities, or dollars per point.
 
 `context.dollar_volatility` = `multiplier` * `average_true_range`
 
 # compute-trade-sizes
-Compute trade size.
+Compute trade sizes, or amount per trade.
 
 `context.trade_size` = `context.capital` * `context.capital_risk_per_trade` / `context.dollar_volatility`
 
+#update-risks
+Update long, short, and market risks.
+
 # place-stop-orders
-Place stop order.
+Place stop orders at 2 times average true range.
 
 If long and `price` is greater than or equal to `cost_basis`, then `context.stop[market] = price - context.average_true_range[market] * context.stop_multiplier`.
 
@@ -103,7 +111,7 @@ If short and `price` is greater than or equal to `cost_basis`, then `context.sto
 If short and `price` is less than `cost_basis`, then `context.stop[market] = price + context.average_true_range[market] * context.stop_multiplier`.
 
 # detect-entry-signals
-Place limit order on 20 or 55 day breakout.
+Place limit orders on 20 or 55 day breakout.
 
 # reflect
 Markets are fixed or dynamic:
