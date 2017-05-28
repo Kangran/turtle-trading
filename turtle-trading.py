@@ -69,6 +69,8 @@ def initialize(context):
     # Order
     context.orders = {}
     context.filled = 1
+    context.canceled = 2
+    context.rejected = 3
     
     for market in context.markets:
         context.orders[market] = []
@@ -388,6 +390,10 @@ def update_risk_limit(context):
             
             if status == context.filled:
                 context.market_risk[market] += 1
+                context.orders[market].remove(order_identifier)
+                
+            if status == context.canceled\
+                    or status == context.rejected:
                 context.orders[market].remove(order_identifier)
 
 def place_stop_order(context):
