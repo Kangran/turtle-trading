@@ -294,6 +294,9 @@ def is_trade_allowed(context, market, price):
         if context.contracts[market] in context.open_orders:
             is_trade_allowed = False
             
+    if context.market_risk[market] > context.market_risk_limit:
+        is_trade_allowed = False
+            
     if context.is_debug:
         time_taken = (time() - start_time) * 1000
         log.debug('Executed in %f ms.' % time_taken)
@@ -386,14 +389,14 @@ def update_risk_limit(context):
     """
     for market in context.orders:
         for order_identifier in context.orders[market]:
-            status = get_order(order_identifier).status
+            a_order = get_order(order_identifier)
             
-            if status == context.filled:
+            if a_order.status == context.filled:
                 context.market_risk[market] += 1
                 context.orders[market].remove(order_identifier)
                 
-            if status == context.canceled\
-                    or status == context.rejected:
+            if a_order.status == context.canceled\
+                    or a_order.status == context.rejected:
                 context.orders[market].remove(order_identifier)
 
 def place_stop_order(context):
