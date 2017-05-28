@@ -35,6 +35,7 @@ def initialize(context):
         lambda market: continuous_future(market),
         context.symbols
     )
+    context.price = None
     context.prices = None
     context.contract = None
     context.contracts = None
@@ -286,7 +287,7 @@ def get_contracts(context, data):
         log.debug('Executed in %f ms.' % time_taken)
         assert(time_taken < 1024)
 
-def is_trade_allowed(context, market, price):
+def is_trade_allowed(context, market):
     """
     Check if allowed to trade.
     """
@@ -301,7 +302,7 @@ def is_trade_allowed(context, market, price):
     if context.capital <= 0:
         is_trade_allowed = False
         
-    if price < context.price_threshold:
+    if context.price < context.price_threshold:
         is_trade_allowed = False
         
     if context.open_orders:
@@ -444,32 +445,32 @@ def place_stop_orders(context):
         cost_basis = context.portfolio.positions[position].cost_basis
         
         try:
-            price = context.prices[market].close[-1]
+            context.price = context.prices[market].close[-1]
         except KeyError:
-            price = 0
+            context.price = 0
 
         if not context.has_stop[market]:
-            if amount > 0 and price >= cost_basis:
-                context.stop[market] = price\
+            if amount > 0 and context.price >= cost_basis:
+                context.stop[market] = context.price\
                     - context.average_true_range[market]\
                     * context.stop_multiplier
-            elif amount > 0 and price < cost_basis:
+            elif amount > 0 and context.price < cost_basis:
                 context.stop[market] = cost_basis\
                     - context.average_true_range[market]\
                     * context.stop_multiplier
-            elif amount > 0 and price == 0:
+            elif amount > 0 and context.price == 0:
                 context.stop[market] = cost_basis\
                     - context.average_true_range[market]\
                     * context.stop_multiplier
-            elif amount < 0 and price >= cost_basis:
+            elif amount < 0 and context.price >= cost_basis:
                 context.stop[market] = cost_basis\
                     + context.average_true_range[market]\
                     * context.stop_multiplier
-            elif amount < 0 and price < cost_basis:
-                context.stop[market] = price\
+            elif amount < 0 and context.price < cost_basis:
+                context.stop[market] = context.price\
                     + context.average_true_range[market]\
                     * context.stop_multiplier
-            elif amount < 0 and price == 0:
+            elif amount < 0 and context.price == 0:
                 context.stop[market] = cost_basis\
                     + context.average_true_range[market]\
                     * context.stop_multiplier
@@ -497,15 +498,15 @@ def detect_entry_signals(context):
     Place limit orders on 20 or 55 day breakout.
     """
     for market in context.prices.items:
-        price = context.prices[market].close[-1]
+        context.price = context.prices[market].close[-1]
 
-        if price > context.twenty_day_high[market]\
-                or price > context.fifty_five_day_high[market]:
-            if is_trade_allowed(context, market, price):
+        if context.price > context.twenty_day_high[market]\
+                or context.price > context.fifty_five_day_high[market]:
+            if is_trade_allowed(context, market):
                 order_identifier = order(
                     context.contract,
                     context.trade_size[market],
-                    style=LimitOrder(price)
+                    style=LimitOrder(context.price)
                 )
 
                 if order_identifier is not None:
@@ -517,16 +518,16 @@ def detect_entry_signals(context):
                         % (
                             market.root_symbol,
                             context.trade_size[market],
-                            price
+                            context.price
                         )
                     )
-        if price < context.twenty_day_low[market]\
-                or price < context.fifty_five_day_low[market]:
-            if is_trade_allowed(context, market, price):
+        if context.price < context.twenty_day_low[market]\
+                or context.price < context.fifty_five_day_low[market]:
+            if is_trade_allowed(context, market):
                 order_identifier = order(
                     context.contract,
                     -context.trade_size[market],
-                    style=LimitOrder(price)
+                    style=LimitOrder(context.price)
                 )
                 if order_identifier is not None:
                     context.orders[market].append(order_identifier)
@@ -537,6 +538,6 @@ def detect_entry_signals(context):
                         % (
                             market.root_symbol,
                             context.trade_size[market],
-                            price
+                            context.price
                         )
                     )
