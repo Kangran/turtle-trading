@@ -421,13 +421,13 @@ def place_stop_order(context):
                     + context.average_true_range[market]\
                     * context.stop_multiplier
             
-            order = order_target(
+            order_identifier = order_target(
                 position,
                 0,
                 style=StopOrder(context.stop[market])
             )
-            if order not None:
-                context.orders[market].append(order)
+            if order_identifier is not None:
+                context.orders[market].append(order_identifier)
                 context.has_stop[market] = True
 
             if context.is_info:
@@ -439,7 +439,7 @@ def place_stop_order(context):
                     )
                 )
 
-def detect_entry_signals(context):
+def detect_entry_signal(context):
     """
     Place limit order on 20 or 55 day breakout.
     """
@@ -449,13 +449,13 @@ def detect_entry_signals(context):
         if price > context.twenty_day_high[market]\
                 or price > context.fifty_five_day_high[market]:
             if is_trade_allowed(context, market, price):
-                order = order(
+                order_identifier = order(
                     context.contract,
                     context.trade_size[market],
                     style=LimitOrder(price)
                 )
-                if order not None:
-                    context.orders[market].append(order)
+                if order_identifier is not None:
+                    context.orders[market].append(order_identifier)
 
                 if context.is_info:
                     log.info(
@@ -469,13 +469,13 @@ def detect_entry_signals(context):
         if price < context.twenty_day_low[market]\
                 or price < context.fifty_five_day_low[market]:
             if is_trade_allowed(context, market, price):
-                order = order(
+                order_identifier = order(
                     context.contract,
                     -context.trade_size[market],
                     style=LimitOrder(price)
                 )
-                if order not None:
-                    context.orders[market].append(order)
+                if order_identifier is not None:
+                    context.orders[market].append(order_identifier)
 
                 if context.is_info:
                     log.info(
