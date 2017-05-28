@@ -98,7 +98,7 @@ def handle_data(context, data):
     compute_trade_size(context)
     place_stop_order(context)
     detect_entry_signals(context)
-        
+    
     if context.is_debug:
         time_taken = (time() - start_time) * 1000
         log.debug('Executed in %f ms.' % time_taken)
@@ -178,7 +178,6 @@ def validate_prices(context):
     if context.is_test:
         assert(context.prices.shape[0] == 3)
         assert(context.prices.shape[1] == 22)
-        assert(context.prices.shape[2] > 0)
         
     if context.is_debug:
         time_taken = (time() - start_time) * 1000
@@ -278,9 +277,7 @@ def is_trade_allowed(context, market, price):
         is_trade_allowed = False
         
     if context.open_orders:
-        context.contract = context.contracts[market]
-        
-        if context.contract in context.open_orders:
+        if context.contracts[market] in context.open_orders:
             is_trade_allowed = False
             
     if context.is_debug:
