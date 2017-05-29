@@ -24,14 +24,9 @@ Profit using trend trading
 # strategy
 See https://github.com/vyq/turtle-trading/raw/master/the-original-turtle-trading-rules.pdf
 
-# backtest
-Week
-- Start date: 2016-01-01
-- End date: 2016-01-08
-- Cash: USD 1,000,000
-- Trading calendar: US Futures
+Exit on price hitting trailing stop of 2 times average true range.
 
-Maximum
+# backtest
 - Start date: 2003-08-05
 - End date: 2017-05-25
 - Cash: USD 1,000,000
@@ -136,6 +131,6 @@ Orders placed at end of day may fail to fill because of insufficient liquidity.
 
 `context.portfolio.positions[position].amount` is negative if position is short.
 
-There are days where `data.history()` returns null prices for all markets.
+There are dates where `data.history()` returns null prices for all markets.
 
 Risk limits do not account for partial fills.
