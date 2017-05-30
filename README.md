@@ -135,3 +135,5 @@ Orders placed at end of day may fail to fill because of insufficient liquidity.
 There are dates where `data.history()` returns null prices for all markets.
 
 Risk limits do not account for partial fills.
+
+Direction risk limit is not capped at 12.
