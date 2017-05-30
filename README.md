@@ -4,7 +4,6 @@ Profit using trend trading
 # return
 |Date|Return %|
 |-|-|
-|2003-08-05 to 2017-05-26|Exception|
 |2003-08-05 to 2004-01-01|(78.28)|
 |2004-01-01 to 2005-01-01|(2286.12)|
 |2005-01-01 to 2006-01-01|(301.43)|
@@ -118,6 +117,8 @@ Context has limitations:
 - Scalar value saved to context in `handle_data()` is accessible in `before_trading_start()` and `schedule_function()`
 - Scalar value saved to context in `before_trading_start()` or `schedule_function()` is not accessible in `handle_data()`
 - 3-dimensional array saved to context in `before_trading_start()` or `schedule_function()` is not accessible in `handle_data()`
+
+Define `context` variable in `initialize()`, so that it can be used in other methods.
 
 `data.history()` contains data from the first minute of the current market day, if called in `handle_data()`.
 
